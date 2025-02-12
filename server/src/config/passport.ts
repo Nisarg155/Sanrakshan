@@ -10,11 +10,11 @@ passport.use(<passport.Strategy>new GoogleStrategy({
         try {
             let user = await User.findOne({googleId: profile.id});
             if (!user) {
-                user = new User({
+                user = await User.create({
                     googleId: profile.id,
-                    emailL: profile._json.email,
+                    email: profile.emails![0].value,
                     displayName: profile.displayName,
-                    profilePicture: profile._json.picture
+                    profilePicture: profile.photos![0].value
                 })
             }
             done(null, user)
