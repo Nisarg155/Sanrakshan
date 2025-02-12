@@ -1,57 +1,70 @@
 import * as dotenv from 'dotenv';
-
 dotenv.config();
+
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-// import  morgan from 'morgan';
+import morgan from 'morgan';
 import mongoose from 'mongoose';
 import passport from 'passport';
-import "./config/passport"
-import authRoute from "./routes/auth"
-import session from "express-session"
-import MongoStore from "connect-mongo";
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
 
+import './config/passport';
+import authRoute from './routes/auth';
 
 const app = express();
 const port = process.env.PORT || 8000;
 
-
-// Use Mongoose's connection in MongoStore
-let store;
-
-
+// Middleware
 app.use(cors());
-app.use(helmet())
-// app.use(morgan('dev'));dev
+app.use(helmet());
+app.use(morgan('dev'));
 app.use(express.json());
-app.use(session({
-    secret: process.env.SESSION_SECRET!,
-    resave: false,
-    saveUninitialized: false,
-    // store,
-    cookie: {
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: process.env.NODE_ENV === 'production' ? "none" : "lax",
-        maxAge: 24 * 60 * 60 * 1000,
-    }
-}))
-app.use(passport.initialize());
-app.use(passport.session());
-app.use("/auth", authRoute);
 
+(async () => {
+  try {
+    // Connect to MongoDB
+    await mongoose.connect(process.env.MONGODB_URI!);
+    console.log('Database Connected');
 
-app.listen(port, () => {
-    console.log("hello")
-    mongoose.connect(process.env.MONGODB_URI!).then(r => {
-        console.log("Database Connected")
-        // store = new MongoStore({
-        //     client: mongoose.connection.getClient(), // Use the existing connection
-        //     collectionName: "sessions", // Optional: Specify a custom collection for sessions
-        // });
-    })
-    console.log(`Server running on port: ${port}`);
-})
+    // Initialize session store
+    const store = MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI!,
+      collectionName: 'sessions'
+    });
 
+    app.use(
+      session({
+        secret: process.env.SESSION_SECRET!,
+        resave: false,
+        saveUninitialized: false,
+        store,
+        cookie: {
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+          maxAge: 24 * 60 * 60 * 1000, // 1 day
+        },
+      })
+    );
 
+    app.use(passport.initialize());
+    app.use(passport.session());
 
+    // Routes
+    app.use('/auth', authRoute);
+
+    // Root route
+    app.get('/', (req, res) => {
+      res.send('Working');
+    });
+
+    // Start server
+    app.listen(port, () => {
+      console.log(`Server running on port: ${port}`);
+    });
+  } catch (error) {
+    console.error('Error connecting to the database:', error);
+    process.exit(1);
+  }
+})();
