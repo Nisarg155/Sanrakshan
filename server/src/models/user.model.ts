@@ -3,6 +3,7 @@ import {model, PipelineStage, Schema} from "mongoose";
 
 
 export interface IUser extends Document {
+    _id: any;
     googleId : string;
     email:string;
     displayName:string;
