@@ -20,6 +20,8 @@ interface ICompensationStructure {
   otherBenefits: string;
 }
 
+
+//suggestion by gemini , (ex. How should you login , ex. Never use your google auth, bcoz they access your gdrive)
 export interface IContractAnalysis extends Document {
   userId: IUser["_id"];
   contractText: string;

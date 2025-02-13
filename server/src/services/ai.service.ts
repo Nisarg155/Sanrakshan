@@ -1,50 +1,99 @@
 import { GoogleGenerativeAI } from "@google/generative-ai"
 import redis from "../config/redis"
-import {getDocument} from 'pdfjs-dist'
+// import {getDocument} from 'pdfjs-dist'
+// const { getDocument } = import('pdfjs-dist/'); 
+// import { getDocument } from 'pdfjs-dist/';
+import * as pdfjs from "pdfjs-dist"
+
+
 
 const AI_MODEL="gemini-pro"
 const genai=new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
 const aiModel = genai.getGenerativeModel({ model: AI_MODEL });
 
 
-export const extractTextToPdf= async (filekey:string)=>{
-    try{
-        const fileData=await redis.get(filekey);
-        if(!fileData){
-            throw new Error("File not found");
-        }
+// export const extractTextToPdf= async (filekey:string)=>{
+//   // @ts-ignore
+//   const { getDocument } = await import('pdfjs-dist/build/pdf.mjs');
+//     try{
 
-        let fileBuffer:Uint8Array;
-        if(Buffer.isBuffer(fileData)){
-            fileBuffer=new Uint8Array(fileData)
-        }else if(typeof fileData==="object" && fileData!==null){
-            const bufferData=fileData as {type?:string; data?:number[]}
-            if(bufferData.type==="Buffer" && Array.isArray(bufferData.data)){
-                fileBuffer=new Uint8Array(bufferData.data)
-            }else{
-                throw new Error("Invalid file data")
-            }
-        }else{
-            throw new Error("Invalid file data")
-        }
+//         const fileData=await redis.get(filekey);
+//         if(!fileData){
+//             throw new Error("File not found");
+//         }
 
-        const pdf=await getDocument({data:fileBuffer}).promise
-        let text=""
-        for (let i=0;i<pdf.numPages;i++){
-            const page=await pdf.getPage(i);
-            const content=await page.getTextContent()
-            text+=content.items.map((item:any)=>item.str).join(" ")+ "\n";
-        }
-        return text
-    }catch(error){
-        console.log(error);
-        throw new Error(
-            `Failed to extract text from pdf. error: ${JSON.stringify(error)}`
-        )
+//         let fileBuffer:Uint8Array;
+//         if(Buffer.isBuffer(fileData)){
+//             fileBuffer=new Uint8Array(fileData)
+//         }else if(typeof fileData==="object" && fileData!==null){
+//             const bufferData=fileData as {type?:string; data?:number[]}
+//             if(bufferData.type==="Buffer" && Array.isArray(bufferData.data)){
+//                 fileBuffer=new Uint8Array(bufferData.data)
+//             }else{
+//                 throw new Error("Invalid file data")
+//             }
+//         }else{
+//             throw new Error("Invalid file data")
+//         }
+
+//         const pdf=await getDocument({data:fileBuffer}).promise
+//         let text=""
+//         for (let i=0;i<pdf.numPages;i++){
+//             const page=await pdf.getPage(i);
+//             const content=await page.getTextContent()
+//             text+=content.items.map((item:any)=>item.str).join(" ")+ "\n";
+//         }
+//         return text
+//     }catch(error){
+//         console.log(error);
+//         throw new Error(
+//             `Failed to extract text from pdf. error: ${JSON.stringify(error)}`
+//         )
         
-    }
-}
+//     }
+// }
 
+export const extractTextToPdf = async (filekey: string) => {
+  try {
+    // Set the worker source
+    // pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`
+    // pdfjs.GlobalWorkerOptions.workerSrc = new URL("pdfjs-dist/build/pdf.worker.mjs", import.meta.url).toString()
+//     const workerSrc = require.resolve('pdfjs-dist/build/pdf.worker.mjs');
+// pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
+const workerSrc = require.resolve('pdfjs-dist/build/pdf.worker.min.js');
+pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
+    const fileData = await redis.get(filekey)
+    if (!fileData) {
+      throw new Error("File not found")
+    }
+
+    let fileBuffer: Uint8Array
+    if (Buffer.isBuffer(fileData)) {
+      fileBuffer = new Uint8Array(fileData)
+    } else if (typeof fileData === "object" && fileData !== null) {
+      const bufferData = fileData as { type?: string; data?: number[] }
+      if (bufferData.type === "Buffer" && Array.isArray(bufferData.data)) {
+        fileBuffer = new Uint8Array(bufferData.data)
+      } else {
+        throw new Error("Invalid file data")
+      }
+    } else {
+      throw new Error("Invalid file data")
+    }
+
+    const pdf = await pdfjs.getDocument({ data: fileBuffer }).promise
+    let text = ""
+    for (let i = 0; i < pdf.numPages; i++) {
+      const page = await pdf.getPage(i + 1)
+      const content = await page.getTextContent()
+      text += content.items.map((item: any) => item.str).join(" ") + "\n"
+    }
+    return text
+  } catch (error) {
+    console.log(error)
+    throw new Error(`Failed to extract text from pdf. error: ${JSON.stringify(error)}`)
+  }
+}
 
 export const detectPrivacyType= async(
     privacyText:string,
