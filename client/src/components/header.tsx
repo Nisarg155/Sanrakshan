@@ -1,25 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import {usePathname} from "next/navigation";
+import {cn} from "@/lib/utils";
+import {Button} from "@/components/ui/button";
+import {UserButton} from "@/components/shared/user-button";
 
 const navItems: { name: string; href: string }[] = [
-    { name: "Dashboard", href: "/dashboard" },
-    { name: "Pricing", href: "/pricing" },
-    { name: "Privacy Policy", href: "/privacy" },
+    {name: "Dashboard", href: "/dashboard"},
+    {name: "Pricing", href: "/pricing"},
+    {name: "Privacy Policy", href: "/privacy"},
 ];
 
 export function Header() {
-    function googleSignIn() : Promise<void>   {
-       return new Promise((resolve)=> {
-           window.location.href = "http://localhost:8000/auth/google";
-           resolve();
-       })
-    }
+
+
     const pathname = usePathname();
-    const user = true;
+
 
     return (
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur px-4">
@@ -48,12 +45,7 @@ export function Header() {
                     </nav>
                 </div>
 
-                {/* Buttons */}
-                <div className="hidden md:flex items-center space-x-4">
-                    <Button
-                    onClick={googleSignIn}
-                    >Get Started</Button>
-                </div>
+                <UserButton/>
             </div>
         </header>
     );
