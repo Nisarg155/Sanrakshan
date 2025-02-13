@@ -7,7 +7,8 @@ import * as pdfjs from "pdfjs-dist"
 
 
 
-const AI_MODEL="gemini-pro"
+// const AI_MODEL="gemini-pro"
+const AI_MODEL="gemini-2.0-flash"
 const genai=new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
 const aiModel = genai.getGenerativeModel({ model: AI_MODEL });
 
