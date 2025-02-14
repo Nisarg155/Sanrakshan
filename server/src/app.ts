@@ -20,10 +20,20 @@ const port = process.env.PORT || 8000;
 // Middleware
 app.use(cors(
   {
-    origin:process.env.CLIENT_URI,
-    credentials:true
+    origin:'http://localhost:3000',
+    credentials:true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
   }
 ));
+
+app.options('*', cors({
+  origin: process.env.CLIENT_URI,
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+}))
+
 app.use(helmet());
 app.use(morgan('dev'));
 app.use(express.json());
@@ -59,8 +69,8 @@ app.use(express.json());
     app.use(passport.session());
 
     // Routes
-    app.use('/auth', authRoute);
-    app.use('/contract', contractRoute);
+    app.use('/', authRoute);
+    app.use('/api/contract', contractRoute);
 
     // Root route
     app.get('/', (req, res) => {

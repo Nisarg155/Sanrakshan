@@ -9,7 +9,7 @@ const router =express.Router()
 // router.post("/detect-type",isAuthenticated,uploadMiddleware, handleErrors(detectAndConfirmContractType))
 router.post("/detect-type",isAuthenticated,uploadMiddleware, handleErrors(detectAndConfirmContractType))
 
-router.post("/analyze",isAuthenticated,uploadMiddleware, handleErrors(analyzeContract))
+router.post("/analyze",uploadMiddleware, handleErrors(analyzeContract))
 
 
 export default router;
