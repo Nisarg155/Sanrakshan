@@ -124,7 +124,6 @@ export function UserButton() {
     // Destructure user and assign default fallback values
     const { profilePicture, displayName, email } = user;
     const profilePicUrl = user[5]  // fallback URL
-    console.log(user);
     
 
     function googleSignIn(): void {

@@ -70,7 +70,7 @@ app.use(express.json());
 
     // Routes
     app.use('/', authRoute);
-    app.use('/api/contract', contractRoute);
+    app.use('/api/contracts', contractRoute);
 
     // Root route
     app.get('/', (req, res) => {
