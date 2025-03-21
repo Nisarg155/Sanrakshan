@@ -1,237 +1,3 @@
-// import { GoogleGenerativeAI } from "@google/generative-ai"
-// import redis from "../config/redis"
-// import * as pdfjs from "pdfjs-dist"
-
-
-
-
-// // const AI_MODEL="gemini-pro"
-// const AI_MODEL="gemini-2.0-flash"
-// const genai=new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
-// const aiModel = genai.getGenerativeModel({ model: AI_MODEL });
-
-
-
-// export const extractTextToPdf = async (filekey: string) => {
-//   try {
-
-
-// // const workerSrc = require.resolve('pdfjs-dist/build/pdf.worker.min.js');
-// // Replace this line
-// // const workerSrc = require.resolve('pdfjs-dist/build/pdf.worker.min.js');
-
-// // With dynamic import
-// // const pdfjsWorker = await import('pdfjs-dist/build/pdf.worker.min.js');
-// pdfjs.GlobalWorkerOptions.workerSrc = require('pdfjs-dist/build/pdf.worker.min.js');
-
-// // pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker.default;
-
-// // pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
-
-//     const fileData = await redis.get(filekey)
-//     if (!fileData) {
-//       throw new Error("File not found")
-//     }
-
-//     let fileBuffer: Uint8Array
-//     if (Buffer.isBuffer(fileData)) {
-//       fileBuffer = new Uint8Array(fileData)
-//     } else if (typeof fileData === "object" && fileData !== null) {
-//       const bufferData = fileData as { type?: string; data?: number[] }
-//       if (bufferData.type === "Buffer" && Array.isArray(bufferData.data)) {
-//         fileBuffer = new Uint8Array(bufferData.data)
-//       } else {
-//         throw new Error("Invalid file data")
-//       }
-//     } else {
-//       throw new Error("Invalid file data")
-//     }
-
-//     const pdf = await pdfjs.getDocument({ data: fileBuffer }).promise
-//     let text = "hi"
-//     for (let i = 0; i < pdf.numPages; i++) {
-//       const page = await pdf.getPage(i + 1)
-//       const content = await page.getTextContent()
-//       text += content.items.map((item: any) => item.str).join(" ") + "\n"
-//     }
-//     return text
-//   } catch (error) {
-//     console.log(error)
-//     throw new Error(`Failed to extract text from pdf. error: ${JSON.stringify(error)}`)
-//   }
-// }
-
-// export const detectPrivacyType= async(
-//     privacyText:string,
-// ):Promise<string>=>{
-    
-//     // const model=genai.getGenerativeModel({
-//     //     model:AI_MODEL
-//     // })
-
-//     const prompt=`
-//     Analyze the following contract text and determine the type of contract it is.
-//     Provide only the contract type as a single string (e.g., "Employment", "Non-Disclosure Agreement", "Sales", "Lease", etc.).
-//     Do not include any additional explanation or text.
-
-//     Contract text: ${privacyText.substring(0, 2000)}
-//     `;
-
-//     const result=await aiModel.generateContent(prompt);
-//     const response= result.response
-//     return response.text().trim();
-// }
-
-
-// export const analyzeContractWithAI = async (
-//     contractText: string,
-//     tier: "free" | "premium",
-//     contractType: string
-//   ) => {
-//     let prompt;
-//     if (tier === "premium") {
-//       prompt = `
-//       Analyze the following ${contractType} contract and provide:
-//       1. A list of at least 10 potential risks for the party receiving the contract, each with a brief explanation and severity level (low, medium, high).
-//       2. A list of at least 10 potential opportunities or benefits for the receiving party, each with a brief explanation and impact level (low, medium, high).
-//       3. A comprehensive summary of the contract, including key terms and conditions.
-//       4. Any recommendations for improving the contract from the receiving party's perspective.
-//       5. A list of key clauses in the contract.
-//       6. An assessment of the contract's legal compliance.
-//       7. A list of potential negotiation points.
-//       8. The contract duration or term, if applicable.
-//       9. A summary of termination conditions, if applicable.
-//       10. A breakdown of any financial terms or compensation structure, if applicable.
-//       11. Any performance metrics or KPIs mentioned, if applicable.
-//       12. A summary of any specific clauses relevant to this type of contract (e.g., intellectual property for employment contracts, warranties for sales contracts).
-//       13. An overall score from 1 to 100, with 100 being the highest. This score represents the overall favorability of the contract based on the identified risks and opportunities.
-  
-//       Format your response as a JSON object with the following structure:
-//       {
-//         "risks": [{"risk": "Risk description", "explanation": "Brief explanation", "severity": "low|medium|high"}],
-//         "opportunities": [{"opportunity": "Opportunity description", "explanation": "Brief explanation", "impact": "low|medium|high"}],
-//         "summary": "Comprehensive summary of the contract",
-//         "recommendations": ["Recommendation 1", "Recommendation 2", ...],
-//         "keyClauses": ["Clause 1", "Clause 2", ...],
-//         "legalCompliance": "Assessment of legal compliance",
-//         "negotiationPoints": ["Point 1", "Point 2", ...],
-//         "contractDuration": "Duration of the contract, if applicable",
-//         "terminationConditions": "Summary of termination conditions, if applicable",
-//         "overallScore": "Overall score from 1 to 100",
-//         "financialTerms": {
-//           "description": "Overview of financial terms",
-//           "details": ["Detail 1", "Detail 2", ...]
-//         },
-//         "performanceMetrics": ["Metric 1", "Metric 2", ...],
-//         "specificClauses": "Summary of clauses specific to this contract type"
-//       }
-//         `;
-//     } else {
-//       prompt = `
-//       Analyze the following ${contractType} contract and provide:
-//       1. A list of at least 5 potential risks for the party receiving the contract, each with a brief explanation and severity level (low, medium, high).
-//       2. A list of at least 5 potential opportunities or benefits for the receiving party, each with a brief explanation and impact level (low, medium, high).
-//       3. A brief summary of the contract
-//       4. An overall score from 1 to 100, with 100 being the highest. This score represents the overall favorability of the contract based on the identified risks and opportunities.
-  
-//        {
-//         "risks": [{"risk": "Risk description", "explanation": "Brief explanation"}],
-//         "opportunities": [{"opportunity": "Opportunity description", "explanation": "Brief explanation"}],
-//         "summary": "Brief summary of the contract",
-//         "overallScore": "Overall score from 1 to 100"
-//       }
-//   `;
-//     }
-  
-//     prompt += `
-//       Important: Provide only the JSON object in your response, without any additional text or formatting. 
-      
-      
-//       Contract text:
-//       ${contractText}
-//       `;
-  
-//     const results = await aiModel.generateContent(prompt);
-//     const response = results.response;
-//     let text = response.text();
-  
-//     // remove any markdown formatting
-//     text = text.replace(/```json\n?|\n?```/g, "").trim();
-  
-//     try {
-//       // Attempt to fix common JSON errors
-//       text = text.replace(/([{,]\s*)(\w+)(\s*:)/g, '$1"$2"$3'); // Ensure all keys are quoted
-//       text = text.replace(/:\s*"([^"]*)"([^,}\]])/g, ': "$1"$2'); // Ensure all string values are properly quoted
-//       text = text.replace(/,\s*}/g, "}"); // Remove trailing commas
-  
-//       const analysis = JSON.parse(text);
-//       return analysis;
-//     } catch (error) {
-//       console.log("Error parsing JSON:", error);
-//     }
-  
-//     interface IRisk {
-//       risk: string;
-//       explanation: string;
-//     }
-  
-//     interface IOpportunity {
-//       opportunity: string;
-//       explanation: string;
-//     }
-  
-//     interface FallbackAnalysis {
-//       risks: IRisk[];
-//       opportunities: IOpportunity[];
-//       summary: string;
-//     }
-//     const fallbackAnalysis: FallbackAnalysis = {
-//         risks: [],
-//         opportunities: [],
-//         summary: "Error analyzing contract",
-//       };
-    
-//       // Extract risks
-//       const risksMatch = text.match(/"risks"\s*:\s*\[([\s\S]*?)\]/);
-//       if (risksMatch) {
-//         fallbackAnalysis.risks = risksMatch[1].split("},").map((risk: string) => {
-//           const riskMatch = risk.match(/"risk"\s*:\s*"([^"]*)"/);
-//           const explanationMatch = risk.match(/"explanation"\s*:\s*"([^"]*)"/);
-//           return {
-//             risk: riskMatch ? riskMatch[1] : "Unknown",
-//             explanation: explanationMatch ? explanationMatch[1] : "Unknown",
-//           };
-//         });
-//       }
-    
-//       //Extact opportunities
-//       const opportunitiesMatch = text.match(/"opportunities"\s*:\s*\[([\s\S]*?)\]/);
-//       if (opportunitiesMatch) {
-//         fallbackAnalysis.opportunities = opportunitiesMatch[1]
-//           .split("},")
-//           .map((opportunity: string) => {
-//             const opportunityMatch = opportunity.match(
-//               /"opportunity"\s*:\s*"([^"]*)"/
-//             );
-//             const explanationMatch = opportunity.match(
-//               /"explanation"\s*:\s*"([^"]*)"/
-//             );
-//             return {
-//               opportunity: opportunityMatch ? opportunityMatch[1] : "Unknown",
-//               explanation: explanationMatch ? explanationMatch[1] : "Unknown",
-//             };
-//           });
-//       }
-    
-//       // Extract summary
-//       const summaryMatch = text.match(/"summary"\s*:\s*"([^"]*)"/);
-//       if (summaryMatch) {
-//         fallbackAnalysis.summary = summaryMatch[1];
-//       }
-    
-//       return fallbackAnalysis;
-//     };  
-
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import redis from "../config/redis";
 import pdf from "pdf-parse";
@@ -437,71 +203,142 @@ export const analyzeContractWithAI = async (
 
   try {
     // Attempt to fix common JSON errors
+    console.log("I'm in bro");
+    
     text = text.replace(/([{,]\s*)(\w+)(\s*:)/g, '$1"$2"$3'); // Ensure all keys are quoted
     text = text.replace(/:\s*"([^"]*)"([^,}\]])/g, ': "$1"$2'); // Ensure all string values are properly quoted
     text = text.replace(/,\s*}/g, "}"); // Remove trailing commas
 
     const analysis = JSON.parse(text);
+    // console.log("My analysis",analysis);
+    
     return analysis;
   } catch (error) {
     console.log("Error parsing JSON:", error);
   }
 
-  interface IRisk {
+  interface IPrivacyRisk {
     risk: string;
     explanation: string;
+    severity: "low" | "medium" | "high";
   }
-
-  interface IOpportunity {
-    opportunity: string;
-    explanation: string;
+  
+  interface IDataSharing {
+    entity: string;
+    purpose: string;
   }
-
-  interface FallbackAnalysis {
-    risks: IRisk[];
-    opportunities: IOpportunity[];
+  
+  interface IPrivacyAnalysis {
+    privacyRisks: IPrivacyRisk[];
     summary: string;
+    recommendations: string[];
+    keyClauses: string[];
+    legalCompliance: string;
+    dataCollected: string[];
+    dataUsage: string[];
+    dataSharing: IDataSharing[];
+    userRights: string[];
+    dataRetentionPeriod: string;
+    trackingTechnologies: string[];
+    policyJurisdiction: string[];
+    gdprCompliance: boolean;
+    ccpaCompliance: boolean;
+    otherRegulations: string[];
   }
-
-  const fallbackAnalysis: FallbackAnalysis = {
-    risks: [],
-    opportunities: [],
-    summary: "Error analyzing contract",
+  
+  const privacyAnalysis: IPrivacyAnalysis = {
+    privacyRisks: [],
+    summary: "Error analyzing privacy policy",
+    recommendations: [],
+    keyClauses: [],
+    legalCompliance: "Unknown",
+    dataCollected: [],
+    dataUsage: [],
+    dataSharing: [],
+    userRights: [],
+    dataRetentionPeriod: "Unknown",
+    trackingTechnologies: [],
+    policyJurisdiction: [],
+    gdprCompliance: false,
+    ccpaCompliance: false,
+    otherRegulations: [],
   };
-
-  // Extract risks
-  const risksMatch = text.match(/"risks"\s*:\s*\[([\s\S]*?)\]/);
+  
+  // Extract privacy risks
+  const risksMatch = text.match(/"privacyRisks"\s*:\s*\[([\s\S]*?)\]/);
   if (risksMatch) {
-    fallbackAnalysis.risks = risksMatch[1].split("},").map((risk: string) => {
+    privacyAnalysis.privacyRisks = risksMatch[1].split("},").map((risk: string) => {
       const riskMatch = risk.match(/"risk"\s*:\s*"([^"]*)"/);
       const explanationMatch = risk.match(/"explanation"\s*:\s*"([^"]*)"/);
+      const severityMatch = risk.match(/"severity"\s*:\s*"(low|medium|high)"/);
       return {
         risk: riskMatch ? riskMatch[1] : "Unknown",
         explanation: explanationMatch ? explanationMatch[1] : "Unknown",
+        severity: severityMatch ? (severityMatch[1] as "low" | "medium" | "high") : "low",
       };
     });
   }
-
-  // Extract opportunities
-  const opportunitiesMatch = text.match(/"opportunities"\s*:\s*\[([\s\S]*?)\]/);
-  if (opportunitiesMatch) {
-    fallbackAnalysis.opportunities = opportunitiesMatch[1]
-      .split("},")
-      .map((opportunity: string) => {
-        const opportunityMatch = opportunity.match(/"opportunity"\s*:\s*"([^"]*)"/);
-        const explanationMatch = opportunity.match(/"explanation"\s*:\s*"([^"]*)"/);
-        return {
-          opportunity: opportunityMatch ? opportunityMatch[1] : "Unknown",
-          explanation: explanationMatch ? explanationMatch[1] : "Unknown",
-        };
-      });
-  }
-
+  
   // Extract summary
   const summaryMatch = text.match(/"summary"\s*:\s*"([^"]*)"/);
   if (summaryMatch) {
-    fallbackAnalysis.summary = summaryMatch[1];
+    privacyAnalysis.summary = summaryMatch[1];
   }
+  
+  // Extract recommendations
+  const recommendationsMatch = text.match(/"recommendations"\s*:\s*\[([\s\S]*?)\]/);
+  if (recommendationsMatch) {
+    privacyAnalysis.recommendations = recommendationsMatch[1]
+      .split(",")
+      .map((rec) => rec.replace(/"/g, "").trim());
+  }
+  
+  // Extract key clauses
+  const keyClausesMatch = text.match(/"keyClauses"\s*:\s*\[([\s\S]*?)\]/);
+  if (keyClausesMatch) {
+    privacyAnalysis.keyClauses = keyClausesMatch[1]
+      .split(",")
+      .map((clause) => clause.replace(/"/g, "").trim());
+  }
+  
+  // Extract legal compliance
+  const legalComplianceMatch = text.match(/"legalCompliance"\s*:\s*"([^"]*)"/);
+  if (legalComplianceMatch) {
+    privacyAnalysis.legalCompliance = legalComplianceMatch[1];
+  }
+  
+  // Extract data collected
+  const dataCollectedMatch = text.match(/"dataCollected"\s*:\s*\[([\s\S]*?)\]/);
+  if (dataCollectedMatch) {
+    privacyAnalysis.dataCollected = dataCollectedMatch[1]
+      .split(",")
+      .map((data) => data.replace(/"/g, "").trim());
+  }
+  
+  // Extract data sharing
+  const dataSharingMatch = text.match(/"dataSharing"\s*:\s*\[([\s\S]*?)\]/);
+  if (dataSharingMatch) {
+    privacyAnalysis.dataSharing = dataSharingMatch[1].split("},").map((share: string) => {
+      const entityMatch = share.match(/"entity"\s*:\s*"([^"]*)"/);
+      const purposeMatch = share.match(/"purpose"\s*:\s*"([^"]*)"/);
+      return {
+        entity: entityMatch ? entityMatch[1] : "Unknown",
+        purpose: purposeMatch ? purposeMatch[1] : "Unknown",
+      };
+    });
+  }
+  
+  // Extract GDPR and CCPA compliance
+  const gdprMatch = text.match(/"gdprCompliance"\s*:\s*(true|false)/);
+  if (gdprMatch) {
+    privacyAnalysis.gdprCompliance = gdprMatch[1] === "true";
+  }
+  
+  const ccpaMatch = text.match(/"ccpaCompliance"\s*:\s*(true|false)/);
+  if (ccpaMatch) {
+    privacyAnalysis.ccpaCompliance = ccpaMatch[1] === "true";
+  }
+  
+  return privacyAnalysis;
 
-  return fallbackAnalysis;
-};
+}
