@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
 // import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { useRouter } from "next/navigation";
+import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 
 interface IUploadModalProps {
     isOpen: boolean;
@@ -292,12 +293,12 @@ export function UploadModal({
                 return (
                     <AnimatePresence>
                         <motion.div>
-                            {/*<Alert className="mt-4">*/}
-                            {/*    <AlertTitle>Analysis completed</AlertTitle>*/}
-                            {/*    <AlertDescription>*/}
-                            {/*        Your contract has been analyzed. you can now view the results*/}
-                            {/*    </AlertDescription>*/}
-                            {/*</Alert>*/}
+                            <Alert className="mt-4">
+                                <AlertTitle>Analysis completed</AlertTitle>
+                                <AlertDescription>
+                                    Your Policy  has been analyzed. you can now view the results.
+                                </AlertDescription>
+                            </Alert>
 
                             <motion.div className="mt-6 flex flex-col space-y-3 relative">
                                 <Button onClick={() => router.push(`/dashboard/results`)}>
