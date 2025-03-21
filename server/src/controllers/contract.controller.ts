@@ -86,8 +86,9 @@ export const analyzeContract = async (req: Request, res: Response) => {
       
       analysis=await analyzeContractWithAI(pdfText,"free",contractType) 
       console.log("got anaylysis",analysis);
+      res.json(analysis)
       
-      if(!analysis.summary || !analysis.risks || !analysis.opportunities){
+      if(!analysis.summary || !analysis.privacyRisks){
         throw new Error("Failed to analyze contract");
       }
 
@@ -99,6 +100,7 @@ export const analyzeContract = async (req: Request, res: Response) => {
         language:"en",
         aiModel:"gemini-pro"
       })
+
     }catch(error){
 
     }

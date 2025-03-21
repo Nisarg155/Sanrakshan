@@ -312,23 +312,49 @@ export const analyzeContractWithAI = async (
 
     Format your response as a JSON object with the following structure:
     {
-      "risks": [{"risk": "Risk description", "explanation": "Brief explanation", "severity": "low|medium|high"}],
-      "opportunities": [{"opportunity": "Opportunity description", "explanation": "Brief explanation", "impact": "low|medium|high"}],
-      "summary": "Comprehensive summary of the contract",
-      "recommendations": ["Recommendation 1", "Recommendation 2", ...],
-      "keyClauses": ["Clause 1", "Clause 2", ...],
-      "legalCompliance": "Assessment of legal compliance",
-      "negotiationPoints": ["Point 1", "Point 2", ...],
-      "contractDuration": "Duration of the contract, if applicable",
-      "terminationConditions": "Summary of termination conditions, if applicable",
-      "overallScore": "Overall score from 1 to 100",
-      "financialTerms": {
-        "description": "Overview of financial terms",
-        "details": ["Detail 1", "Detail 2", ...]
-      },
-      "performanceMetrics": ["Metric 1", "Metric 2", ...],
-      "specificClauses": "Summary of clauses specific to this contract type"
+  "privacyRisks": [
+    {
+      "risk": "Describe the identified risk",
+      "explanation": "Provide a brief explanation of why this is a risk",
+      "severity": "low | medium | high"
     }
+  ],
+  "summary": "Provide a comprehensive summary of the privacy policy",
+  "recommendations": [
+    "Provide actionable recommendations to improve the policy"
+  ],
+  "keyClauses": [
+    "List important clauses relevant to data privacy and security"
+  ],
+  "legalCompliance": "Assess whether the privacy policy complies with GDPR, CCPA, and other relevant regulations",
+  "dataCollected": [
+    "List the types of data collected as mentioned in the policy"
+  ],
+  "dataUsage": [
+    "Describe how the collected data is used"
+  ],
+  "dataSharing": [
+    {
+      "entity": "Name of the third-party entity data is shared with",
+      "purpose": "Explain why data is shared with this entity"
+    }
+  ],
+  "userRights": [
+    "List the rights given to users regarding their data"
+  ],
+  "dataRetentionPeriod": "Specify how long the data is retained",
+  "trackingTechnologies": [
+    "List any tracking technologies used, such as cookies or web beacons"
+  ],
+  "policyJurisdiction": [
+    "Specify the legal jurisdiction governing the privacy policy"
+  ],
+  "gdprCompliance": true | false,
+  "ccpaCompliance": true | false,
+  "otherRegulations": [
+    "Mention any other applicable regulations"
+  ]
+}
     `;
   } else {
     prompt = `

@@ -13,6 +13,13 @@ interface IOpportunity {
   impact: "low" | "medium" | "high";
 }
 
+
+interface IDataSharing {
+  entity: string;
+  purpose: string;
+}
+
+
 interface ICompensationStructure {
   baseSalary: string;
   bonuses: string;
@@ -25,18 +32,18 @@ interface ICompensationStructure {
 export interface IContractAnalysis extends Document {
   userId: IUser["_id"];
   contractText: string;
-  risks: IRisk[];
-  opportunities: IOpportunity[];
+  privacyRisks : IRisk[];
+  // opportunities: IOpportunity[];
   summary: string;
   recommendations: string[];
   keyClauses: string[];
-  legalCompliance: string;
-  negotiationPoints: string[];
-  contractDuration: string;
-  terminationConditions: string;
+  // legalCompliance: string;
+  // negotiationPoints: string[];
+  // contractDuration: string;
+  // terminationConditions: string;
   overallScore: number;
-  compensationStructure: ICompensationStructure;
-  performanceMetrics: string[];
+  // compensationStructure: ICompensationStructure;
+  // performanceMetrics: string[];
   intellectualPropertyClauses: string | string[];
   createdAt: Date;
   version: number;
@@ -48,34 +55,47 @@ export interface IContractAnalysis extends Document {
   expirationDate: Date;
   language: string;
   aiModel: string;
-  contractType: string;
-  financialTerms?: {
-    description: string;
-    details: string[];
-  };
+  // contractType: string;
+  // financialTerms?: {
+  //   description: string;
+  //   details: string[];
+  // };
   //   projectId: IProject["_id"];
+
+  datadataCollected :string[];
+  dataUsage :string[];
+  dataSharing:IDataSharing[];
+  userRights :string[];
+  dataRetentionPeriod:string[];
+  trackingTechnologies :string[];
+  policyJurisdiction:string[];
+  gdprCompliance:boolean,
+  ccpaCompliance :boolean,
+  otherRegulations :string[],
+
 }
+
 
 const ContractAnalysisSchema: Schema = new Schema({
   userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
   contractText: { type: String, required: true },
-  risks: [{ risk: String, explanation: String, severity: String }],
-  opportunities: [{ opportunity: String, explanation: String, impact: String }],
+  privacyRisks: [{ risk: String, explanation: String, severity: String }],
+  // opportunities: [{ opportunity: String, explanation: String, impact: String }],
   summary: { type: String, required: true },
   recommendations: [{ type: String }],
   keyClauses: [{ type: String }],
-  legalCompliance: { type: String },
-  negotiationPoints: [{ type: String }],
-  contractDuration: { type: String },
-  terminationConditions: { type: String },
+  // legalCompliance: { type: String },
+  // negotiationPoints: [{ type: String }],
+  // contractDuration: { type: String },
+  // terminationConditions: { type: String },
   overallScore: { type: Number, min: 0, max: 100 },
-  compensationStructure: {
-    baseSalary: String,
-    bonuses: String,
-    equity: String,
-    otherBenefits: String,
-  },
-  performanceMetrics: [{ type: String }],
+  // compensationStructure: {
+  //   baseSalary: String,
+  //   bonuses: String,
+  //   equity: String,
+  //   otherBenefits: String,
+  // },
+  // performanceMetrics: [{ type: String }],
   intellectualPropertyClauses: {
     type: Schema.Types.Mixed,
     validate: {
@@ -99,12 +119,28 @@ const ContractAnalysisSchema: Schema = new Schema({
   expirationDate: { type: Date, required: false },
   language: { type: String, default: "en" },
   aiModel: { type: String, default: "gemini-pro" },
-  contractType: { type: String, required: true },
-  financialTerms: {
-    description: String,
-    details: [String],
-  },
+  // contractType: { type: String, required: true },
+  // financialTerms: {
+  //   description: String,
+  //   details: [String],
+  // },
   //   projectId: { type: Schema.Types.ObjectId, ref: "Project", required: true },
+
+  dataCollected: [{ type: String }],
+  dataUsage: [{ type: String }],
+  dataSharing: [
+    {
+      entity: { type: String, required: true },
+      purpose: { type: String, required: true },
+    },
+  ], 
+  userRights: [{ type: String }],
+  dataRetentionPeriod: { type: String },
+  trackingTechnologies: [{ type: String }],
+  policyJurisdiction: [{ type: String }],
+  gdprCompliance: { type: Boolean, default: false },
+  ccpaCompliance: { type: Boolean, default: false },
+  otherRegulations: [{ type: String }],
 });
 
 export default mongoose.model<IContractAnalysis>(
