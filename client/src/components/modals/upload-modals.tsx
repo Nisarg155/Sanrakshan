@@ -81,7 +81,8 @@ export function UploadModal({
                     "Content-Type": "multipart/form-data",
                 },
             });
-
+            console.log("Helloo dnei");
+            
             console.log(response.data);
             return response.data;
         },
