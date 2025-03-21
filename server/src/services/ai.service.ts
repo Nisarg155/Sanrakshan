@@ -358,18 +358,66 @@ export const analyzeContractWithAI = async (
     `;
   } else {
     prompt = `
-    Analyze the following ${contractType} contract and provide:
-    1. A list of at least 5 potential risks for the party receiving the contract, each with a brief explanation and severity level (low, medium, high).
-    2. A list of at least 5 potential opportunities or benefits for the receiving party, each with a brief explanation and impact level (low, medium, high).
-    3. A brief summary of the contract
-    4. An overall score from 1 to 100, with 100 being the highest. This score represents the overall favorability of the contract based on the identified risks and opportunities.
+   Analyze the following ${contractType} contract and provide:
+    1. A list of at least 10 potential risks for the party receiving the contract, each with a brief explanation and severity level (low, medium, high).
+    2. A list of at least 10 potential opportunities or benefits for the receiving party, each with a brief explanation and impact level (low, medium, high).
+    3. A comprehensive summary of the contract, including key terms and conditions.
+    4. Any recommendations for improving the contract from the receiving party's perspective.
+    5. A list of key clauses in the contract.
+    6. An assessment of the contract's legal compliance.
+    7. A list of potential negotiation points.
+    8. The contract duration or term, if applicable.
+    9. A summary of termination conditions, if applicable.
+    10. A breakdown of any financial terms or compensation structure, if applicable.
+    11. Any performance metrics or KPIs mentioned, if applicable.
+    12. A summary of any specific clauses relevant to this type of contract (e.g., intellectual property for employment contracts, warranties for sales contracts).
+    13. An overall score from 1 to 100, with 100 being the highest. This score represents the overall favorability of the contract based on the identified risks and opportunities.
 
+    Format your response as a JSON object with the following structure:
     {
-      "risks": [{"risk": "Risk description", "explanation": "Brief explanation"}],
-      "opportunities": [{"opportunity": "Opportunity description", "explanation": "Brief explanation"}],
-      "summary": "Brief summary of the contract",
-      "overallScore": "Overall score from 1 to 100"
+  "privacyRisks": [
+    {
+      "risk": "Describe the identified risk",
+      "explanation": "Provide a brief explanation of why this is a risk",
+      "severity": "low | medium | high"
     }
+  ],
+  "summary": "Provide a comprehensive summary of the privacy policy",
+  "recommendations": [
+    "Provide actionable recommendations to improve the policy"
+  ],
+  "keyClauses": [
+    "List important clauses relevant to data privacy and security"
+  ],
+  "legalCompliance": "Assess whether the privacy policy complies with GDPR, CCPA, and other relevant regulations",
+  "dataCollected": [
+    "List the types of data collected as mentioned in the policy"
+  ],
+  "dataUsage": [
+    "Describe how the collected data is used"
+  ],
+  "dataSharing": [
+    {
+      "entity": "Name of the third-party entity data is shared with",
+      "purpose": "Explain why data is shared with this entity"
+    }
+  ],
+  "userRights": [
+    "List the rights given to users regarding their data"
+  ],
+  "dataRetentionPeriod": "Specify how long the data is retained",
+  "trackingTechnologies": [
+    "List any tracking technologies used, such as cookies or web beacons"
+  ],
+  "policyJurisdiction": [
+    "Specify the legal jurisdiction governing the privacy policy"
+  ],
+  "gdprCompliance": true | false,
+  "ccpaCompliance": true | false,
+  "otherRegulations": [
+    "Mention any other applicable regulations"
+  ]
+}
     `; 
   }
 
