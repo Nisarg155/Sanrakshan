@@ -1,366 +1,447 @@
-import { ContractAnalysis } from "@/interfaces/contract.interface";
-import { ReactNode, useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
-import { ArrowDown, ArrowUp, Minus } from "lucide-react";
-import OverallScoreChart from "./chart";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { motion } from "framer-motion";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
-import { Accordion, AccordionItem, AccordionTrigger } from "../ui/accordion";
-import { AccordionContent } from "@radix-ui/react-accordion";
+"use client"
 
-interface IContractAnalysisResultsProps {
-  analysisResults: ContractAnalysis;
-  isActive: boolean;
-  contractId: string;
-  // onUpgrade: () => void;
+import { useState } from "react"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Badge } from "@/components/ui/badge"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { InfoIcon, ShieldAlert, ShieldCheck, AlertTriangle } from 'lucide-react'
+import { Progress } from "@/components/ui/progress"
+import { Separator } from "@/components/ui/separator"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+
+interface IPrivacyRisk {
+  risk: string
+  explanation: string
+  severity: "low" | "medium" | "high"
 }
 
-export default function ContractAnalysisResults({
-  analysisResults,
-  isActive,
-  // onUpgrade,
-}: IContractAnalysisResultsProps) {
-  const [activeTab, setActiveTab] = useState("summary");
+interface IDataSharing {
+  entity: string
+  purpose: string
+}
 
-  if (!analysisResults) {
-    return <div>No results</div>;
-  }
+interface IPrivacyAnalysis {
+  privacyRisks: IPrivacyRisk[]
+  summary: string
+  recommendations: string[]
+  keyClauses: string[]
+  legalCompliance: string
+  dataCollected: string[]
+  dataUsage: string[]
+  dataSharing: IDataSharing[]
+  userRights: string[]
+  dataRetentionPeriod: string
+  trackingTechnologies: string[]
+  policyJurisdiction: string[]
+  gdprCompliance: boolean
+  ccpaCompliance: boolean
+  otherRegulations: string[]
+}
 
-  const getScore = () => {
-    const score = analysisResults.overallScore; //analysisResults.overallScore ||
-    if (score > 70)
-      return { icon: ArrowUp, color: "text-green-500", text: "Good" };
-    if (score < 50)
-      return { icon: ArrowDown, color: "text-red-500", text: "Bad" };
-    return { icon: Minus, color: "text-yellow-500", text: "Average" };
-  };
+interface PrivacyAnalysisResultsProps {
+  analysisResults: IPrivacyAnalysis
+}
 
-  const scoreTrend = getScore();
+export default function PrivacyAnalysisResults({ analysisResults }: PrivacyAnalysisResultsProps) {
+  const [activeTab, setActiveTab] = useState("overview")
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case "high":
-        return "bg-red-100 text-red-800";
+        return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"
       case "medium":
-        return "bg-yellow-100 text-yellow-800";
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400"
       case "low":
-        return "bg-green-100 text-green-800";
+        return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+      default:
+        return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400"
     }
-  };
+  }
 
-  const getImpactColor = (impact: string) => {
-    switch (impact) {
+  const getSeverityIcon = (severity: string) => {
+    switch (severity) {
       case "high":
-        return "bg-red-100 text-red-800";
+        return <ShieldAlert className="h-5 w-5 text-red-600 dark:text-red-400" />
       case "medium":
-        return "bg-yellow-100 text-yellow-800";
+        return <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
       case "low":
-        return "bg-green-100 text-green-800";
+        return <ShieldCheck className="h-5 w-5 text-green-600 dark:text-green-400" />
+      default:
+        return <InfoIcon className="h-5 w-5 text-gray-600 dark:text-gray-400" />
     }
-  };
+  }
 
-  const renderRisksAndOpportunities = (
-    items: Array<{
-      risk?: string;
-      opportunity?: string;
-      explanation?: string;
-      severity?: string;
-      impact?: string;
-    }>,
-    type: "risks" | "opportunities"
-  ) => {
-    const displayItems = isActive ? items : items.slice(0, 3);
-    const fakeItems = {
-      risk: type === "risks" ? "Hidden Risk" : undefined,
-      opportunity: type === "opportunities" ? "Hidden Opportunity" : undefined,
-      explanation: "Hidden Explanation",
-      severity: "low",
-      impact: "low",
-    };
+  const calculateComplianceScore = () => {
+    let score = 50 // Base score
 
-    return (
-      <ul className="space-y-4">
-        {displayItems.map((item, index) => (
-          <motion.li
-            className="border rounded-lg p-4"
-            key={index}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3, delay: index * 0.1 }}
-          >
-            <div className="flex justify-between items-start mb-2">
-              <span className="font-semibold text-lg">
-                {type === "risks" ? item.risk : item.opportunity}
-              </span>
-              {(item.severity || item.impact) && (
-                <Badge
-                  className={
-                    type === "risks"
-                      ? getSeverityColor(item.severity!)
-                      : getImpactColor(item.impact!)
-                  }
-                >
-                  {(item.severity || item.impact)?.toUpperCase()}
-                </Badge>
-              )}
-            </div>
-            <p className="mt-2 text-gray-600">
-              {type === "risks" ? item.explanation : item.explanation}
-            </p>
-          </motion.li>
-        ))}
-        {!isActive && items.length > 3 && (
-          <motion.li
-            className="border rounded-lg p-4 blur-sm"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: displayItems.length * 0.1 }}
-          >
-            <div className="flex justify-between items-start mb-2">
-              <span className="font-semibold text-lg">
-                {type === "risks" ? fakeItems.risk : fakeItems.opportunity}
-              </span>
-              <Badge>
-                {(fakeItems.severity || fakeItems.impact)?.toUpperCase()}
-              </Badge>
-            </div>
-          </motion.li>
-        )}
-      </ul>
-    );
-  };
+    // Add points for compliance
+    if (analysisResults.gdprCompliance) score += 15
+    if (analysisResults.ccpaCompliance) score += 15
 
-  const renderPremiumAccordition = (content: ReactNode) => {
-    if (isActive) {
-      return content;
-    }
+    // Deduct points for risks
+    const highRisks = analysisResults.privacyRisks.filter((r) => r.severity === "high").length
+    const mediumRisks = analysisResults.privacyRisks.filter((r) => r.severity === "medium").length
+    
+    score -= highRisks * 10
+    score -= mediumRisks * 5
 
-    return (
-      <div className="relative">
-        <div className="absolute inset-0 bg-white/50 backdrop-blur-sm z-50 flex items-center justify-center">
-          {/* <Button onClick={onUpgrade} variant={"outline"}> */}
-          <Button  variant={"outline"}>
-            Upgrade to Premium
-          </Button>
-        </div>
-        <div className="opacity-50">{content}</div>
-      </div>
-    );
-  };
+    // Add points for user rights and transparency
+    if (analysisResults.userRights.length > 0) score += 10
+    if (analysisResults.dataRetentionPeriod !== "Unknown") score += 5
+
+    // Ensure score is between 0 and 100
+    return Math.max(0, Math.min(100, score))
+  }
+
+  const complianceScore = calculateComplianceScore()
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Analysis Results</h1>
-        <div className="flex space-x-2">{/* ASK AI BUTTON */}</div>
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold mb-2">Privacy Policy Analysis</h1>
+        <p className="text-muted-foreground">
+          Analysis of privacy practices, data collection, and regulatory compliance
+        </p>
       </div>
 
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>Overal Contract Score</CardTitle>
-          <CardDescription>
-            Based on risks and opportunities identified
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center justify-between">
-            <div className="w-1/2">
-              <div className="flex items-center space-x-4 mb-4">
-                <div className="text-4xl font-bold">
-                  {analysisResults.overallScore ?? 0}
-                </div>
-                <div className={`flex items-center ${scoreTrend.color}`}>
-                  <scoreTrend.icon className="size-6 mr-1" />
-                  <span className="font-semibold">{scoreTrend.text}</span>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Risk</span>
-                  <span>{100 - analysisResults.overallScore}%</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span>Opportunities</span>
-                  <span>{analysisResults.overallScore}%</span>
-                </div>
-              </div>
-              <p className="text-sm text-gray-600 mt-4">
-                This score represents the overall risk and opportunitys
-                identified in the contract.
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle>Compliance Score</CardTitle>
+            <CardDescription>Overall privacy compliance rating</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-col items-center">
+              <div className="text-4xl font-bold mb-2">{complianceScore}%</div>
+              <Progress value={complianceScore} className="w-full h-2 mb-2" />
+              <p className="text-sm text-muted-foreground text-center">
+                {complianceScore >= 70
+                  ? "Good privacy practices"
+                  : complianceScore >= 40
+                  ? "Some privacy concerns"
+                  : "Significant privacy issues"}
               </p>
             </div>
+          </CardContent>
+        </Card>
 
-            <div className="w-1/2 h-48 flex justify-center items-center">
-              <div className="w-full h-full max-w-xs">
-                <OverallScoreChart
-                  overallScore={analysisResults.overallScore}
-                />
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle>Regulatory Compliance</CardTitle>
+            <CardDescription>Adherence to privacy regulations</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="flex items-center gap-2">
+                <Badge variant={analysisResults.gdprCompliance ? "default" : "outline"}>
+                  GDPR
+                </Badge>
+                <span className="text-sm">
+                  {analysisResults.gdprCompliance ? "Compliant" : "Non-compliant"}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Badge variant={analysisResults.ccpaCompliance ? "default" : "outline"}>
+                  CCPA
+                </Badge>
+                <span className="text-sm">
+                  {analysisResults.ccpaCompliance ? "Compliant" : "Non-compliant"}
+                </span>
               </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+            {analysisResults.otherRegulations.length > 0 && (
+              <div className="mt-4">
+                <p className="text-sm font-medium mb-1">Other Regulations:</p>
+                <div className="flex flex-wrap gap-2">
+                  {analysisResults.otherRegulations.map((reg, index) => (
+                    <Badge key={index} variant="outline">
+                      {reg}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle>Risk Assessment</CardTitle>
+            <CardDescription>Privacy risks identified</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span>High Risk Issues</span>
+                <Badge variant="outline" className="bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
+                  {analysisResults.privacyRisks.filter((r) => r.severity === "high").length}
+                </Badge>
+              </div>
+              <div className="flex justify-between items-center">
+                <span>Medium Risk Issues</span>
+                <Badge variant="outline" className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">
+                  {analysisResults.privacyRisks.filter((r) => r.severity === "medium").length}
+                </Badge>
+              </div>
+              <div className="flex justify-between items-center">
+                <span>Low Risk Issues</span>
+                <Badge variant="outline" className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                  {analysisResults.privacyRisks.filter((r) => r.severity === "low").length}
+                </Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="summary">Summary</TabsTrigger>
+        <TabsList className="grid grid-cols-5 w-full">
+          <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="risks">Risks</TabsTrigger>
-          <TabsTrigger value="opportunities">Opportunities</TabsTrigger>
-          <TabsTrigger value="details">Details</TabsTrigger>
+          <TabsTrigger value="data">Data Handling</TabsTrigger>
+          <TabsTrigger value="rights">User Rights</TabsTrigger>
+          <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
         </TabsList>
-        <TabsContent value="summary">
+
+        <TabsContent value="overview" className="mt-4">
           <Card>
             <CardHeader>
-              <CardTitle>Contract Summary</CardTitle>
+              <CardTitle>Policy Summary</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-lg leading-relaxed">
-                {analysisResults.summary}
-              </p>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        <TabsContent value="risks">
-          <Card>
-            <CardHeader>
-              <CardTitle>Risks</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {renderRisksAndOpportunities(analysisResults.risks, "risks")}
-              {!isActive && (
-                <p className="mt-4 text-center text-sm text-gray-500">
-                  Upgrade to Premium to see all risks
-                </p>
+              <p className="text-lg leading-relaxed mb-6">{analysisResults.summary}</p>
+              
+              <h3 className="text-lg font-semibold mb-2">Legal Compliance</h3>
+              <p className="mb-4">{analysisResults.legalCompliance}</p>
+              
+              <h3 className="text-lg font-semibold mb-2">Key Clauses</h3>
+              {analysisResults.keyClauses.length > 0 ? (
+                <ul className="list-disc pl-5 space-y-1">
+                  {analysisResults.keyClauses.map((clause, index) => (
+                    <li key={index}>{clause}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-muted-foreground">No key clauses identified</p>
               )}
             </CardContent>
           </Card>
         </TabsContent>
-        <TabsContent value="opportunities">
+
+        <TabsContent value="risks" className="mt-4">
           <Card>
             <CardHeader>
-              <CardTitle>Opportunities</CardTitle>
+              <CardTitle>Privacy Risks</CardTitle>
+              <CardDescription>Issues identified in the privacy policy</CardDescription>
             </CardHeader>
             <CardContent>
-              {renderRisksAndOpportunities(
-                analysisResults.opportunities,
-                "opportunities"
-              )}
-              {!isActive && (
-                <p className="mt-4 text-center text-sm text-gray-500">
-                  Upgrade to Premium to see all opportunities
-                </p>
+              {analysisResults.privacyRisks.length > 0 ? (
+                <div className="space-y-4">
+                  {analysisResults.privacyRisks.map((risk, index) => (
+                    <Alert key={index} className="border-l-4" style={{ borderLeftColor: risk.severity === "high" ? "#ef4444" : risk.severity === "medium" ? "#f59e0b" : "#10b981" }}>
+                      <div className="flex items-start">
+                        {getSeverityIcon(risk.severity)}
+                        <div className="ml-3 w-full">
+                          <div className="flex justify-between items-center">
+                            <AlertTitle>{risk.risk}</AlertTitle>
+                            <Badge className={getSeverityColor(risk.severity)}>
+                              {risk.severity.toUpperCase()}
+                            </Badge>
+                          </div>
+                          <AlertDescription className="mt-1">
+                            {risk.explanation}
+                          </AlertDescription>
+                        </div>
+                      </div>
+                    </Alert>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <ShieldCheck className="h-12 w-12 text-green-500 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium mb-1">No Privacy Risks Detected</h3>
+                  <p className="text-muted-foreground">
+                    The privacy policy appears to be compliant with best practices.
+                  </p>
+                </div>
               )}
             </CardContent>
           </Card>
         </TabsContent>
-        <TabsContent value="details">
-          {isActive ? (
-            <div className="grid md:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Contract Details</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    {analysisResults.keyClauses?.map((keyClause:any, index:number) => (
-                      <motion.li key={index} className="flex items-center">
-                        {keyClause}
-                      </motion.li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Recommdations</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    {analysisResults.recommendations?.map(
-                      (recommendation:any, index:number) => (
-                        <motion.li key={index} className="flex items-center">
-                          {recommendation}
-                        </motion.li>
-                      )
-                    )}
-                  </ul>
-                </CardContent>
-              </Card>
-            </div>
-          ) : (
+
+        <TabsContent value="data" className="mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle>Contract Details</CardTitle>
+                <CardTitle>Data Collection</CardTitle>
+                <CardDescription>Types of data collected from users</CardDescription>
               </CardHeader>
               <CardContent>
-                <p>
-                  Upgrade to Premium to see contract detailed analysis,
-                  including key clauses and recommendations.
-                </p>
-                <Button
-                  variant={"outline"}
-                  // onClick={onUpgrade}
-                  className="mt-4"
-                >
-                  Upgrade to Premium
-                </Button>
+                {analysisResults.dataCollected.length > 0 ? (
+                  <ul className="space-y-2">
+                    {analysisResults.dataCollected.map((data, index) => (
+                      <li key={index} className="flex items-center gap-2">
+                        <span className="h-2 w-2 rounded-full bg-primary"></span>
+                        {data}
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-muted-foreground">No data collection details specified</p>
+                )}
+                
+                <Separator className="my-4" />
+                
+                <div>
+                  <h3 className="text-sm font-medium mb-2">Data Retention Period</h3>
+                  <p>{analysisResults.dataRetentionPeriod}</p>
+                </div>
+                
+                {analysisResults.trackingTechnologies.length > 0 && (
+                  <>
+                    <Separator className="my-4" />
+                    <div>
+                      <h3 className="text-sm font-medium mb-2">Tracking Technologies</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {analysisResults.trackingTechnologies.map((tech, index) => (
+                          <Badge key={index} variant="outline">
+                            {tech}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                )}
               </CardContent>
             </Card>
-          )}
+            
+            <Card>
+              <CardHeader>
+                <CardTitle>Data Usage & Sharing</CardTitle>
+                <CardDescription>How collected data is used and shared</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="mb-4">
+                  <h3 className="text-sm font-medium mb-2">Data Usage</h3>
+                  {analysisResults.dataUsage.length > 0 ? (
+                    <ul className="space-y-2">
+                      {analysisResults.dataUsage.map((usage, index) => (
+                        <li key={index} className="flex items-center gap-2">
+                          <span className="h-2 w-2 rounded-full bg-primary"></span>
+                          {usage}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="text-muted-foreground">No data usage details specified</p>
+                  )}
+                </div>
+                
+                <Separator className="my-4" />
+                
+                <div>
+                  <h3 className="text-sm font-medium mb-2">Data Sharing</h3>
+                  {analysisResults.dataSharing.length > 0 ? (
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Entity</TableHead>
+                          <TableHead>Purpose</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {analysisResults.dataSharing.map((sharing, index) => (
+                          <TableRow key={index}>
+                            <TableCell>{sharing.entity}</TableCell>
+                            <TableCell>{sharing.purpose}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  ) : (
+                    <p className="text-muted-foreground">No data sharing details specified</p>
+                  )}
+                </div>
+                
+                {analysisResults.policyJurisdiction.length > 0 && (
+                  <>
+                    <Separator className="my-4" />
+                    <div>
+                      <h3 className="text-sm font-medium mb-2">Policy Jurisdiction</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {analysisResults.policyJurisdiction.map((jurisdiction, index) => (
+                          <Badge key={index} variant="outline">
+                            {jurisdiction}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+        </TabsContent>
+
+        <TabsContent value="rights" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>User Rights</CardTitle>
+              <CardDescription>Rights granted to users regarding their data</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {analysisResults.userRights.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {analysisResults.userRights.map((right, index) => (
+                    <div key={index} className="flex items-start gap-3 p-3 border rounded-lg">
+                      <ShieldCheck className="h-5 w-5 text-primary mt-0.5" />
+                      <div>
+                        <p>{right}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <AlertTriangle className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium mb-1">No User Rights Specified</h3>
+                  <p className="text-muted-foreground">
+                    The privacy policy does not clearly outline user rights regarding their data.
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="recommendations" className="mt-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Recommendations</CardTitle>
+              <CardDescription>Suggested improvements for the privacy policy</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {analysisResults.recommendations.length > 0 ? (
+                <div className="space-y-4">
+                  {analysisResults.recommendations.map((recommendation, index) => (
+                    <div key={index} className="flex items-start gap-3 p-4 border rounded-lg">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border bg-background">
+                        <span className="text-sm font-medium">{index + 1}</span>
+                      </div>
+                      <div>
+                        <p>{recommendation}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-muted-foreground text-center py-8">No recommendations provided</p>
+              )}
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
-
-      <Accordion type="single" collapsible className="mb-6">
-        {renderPremiumAccordition(
-          <>
-            <AccordionItem value="contract-details">
-              <AccordionTrigger>Contract Details</AccordionTrigger>
-              <AccordionContent>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <h3 className="font-semibold mb-2">
-                      Duration and Termination
-                    </h3>
-                    <p>{analysisResults.contractDuration}</p>
-                    <strong>Termination Conditions</strong>
-                    <p>{analysisResults.terminationConditions}</p>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-2">Legal Informatiob</h3>
-                    <p>
-                      <strong>Legal Compliance</strong>
-                      {analysisResults.legalCompliance}
-                    </p>
-                  </div>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-          </>
-        )}
-      </Accordion>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Negotiation Points</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul className="grid md:grid-cols-2 gap-2">
-            {analysisResults.negotiationPoints?.map((point:any, index:any) => (
-              <li className="flex items-center" key={index}>
-                {point}
-              </li>
-            ))}
-          </ul>
-        </CardContent>
-      </Card>
     </div>
-  );
+  )
 }
