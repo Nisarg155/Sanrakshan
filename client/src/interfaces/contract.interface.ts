@@ -20,6 +20,8 @@ interface Risk {
   }
   
   export interface ContractAnalysis {
+    severity: string;
+    privacyRisks: any;
     userId: string;
     contractText: string;
     risks: Risk[];
