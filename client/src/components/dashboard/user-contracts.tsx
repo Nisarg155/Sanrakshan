@@ -55,16 +55,6 @@ export default function UserContracts() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
-  const contractTypeColors: { [key: string]: string } = {
-    Employment: "bg-blue-100 text-blue-800 hover:bg-blue-200",
-    "Non-Disclosure Agreement":
-      "bg-green-100 text-green-800 hover:bg-green-200",
-    Sales: "bg-yellow-100 text-yellow-800 hover:bg-yellow-200",
-    Lease: "bg-emerald-100 text-emerald-800 hover:bg-emerald-200",
-    Services: "bg-pink-100 text-pink-800 hover:bg-pink-200",
-    Other: "bg-gray-100 text-gray-800 hover:bg-gray-200",
-  };
-
   const columns: ColumnDef<ContractAnalysis>[] = [
     {
       accessorKey: "_id",
@@ -91,18 +81,6 @@ export default function UserContracts() {
         >
           {score.toFixed(2)} Overall Score
         </Badge>
-        );
-      },
-    },
-    {
-      accessorKey: "contractType",
-      header: "Contract Type",
-      cell: ({ row }) => {
-        const contractType = row.getValue("contractType") as string;
-        const colorClass =
-          contractTypeColors[contractType] || contractTypeColors["Other"];
-        return (
-          <Badge className={cn("rounded-md", colorClass)}>{contractType}</Badge>
         );
       },
     },
