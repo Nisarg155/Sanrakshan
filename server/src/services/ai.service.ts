@@ -87,7 +87,7 @@ export const analyzeContractWithAI = async (
   ],
   "summary": "Provide a comprehensive summary of the privacy policy",
   "recommendations": [
-    "Provide actionable recommendations to improve the policy"
+    "Provide actionable recommendations for end user to use the services provided and how to use it to save themselves"
   ],
   "keyClauses": [
     "List important clauses relevant to data privacy and security"
@@ -150,7 +150,7 @@ export const analyzeContractWithAI = async (
   ],
   "summary": "Provide a comprehensive summary of the privacy policy",
   "recommendations": [
-    "Provide actionable recommendations to improve the policy"
+    "Provide actionable recommendations for end user to use the services provided and how to use it to save themselves"
   ],
   "keyClauses": [
     "List important clauses relevant to data privacy and security"
