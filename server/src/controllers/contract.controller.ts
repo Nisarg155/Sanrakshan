@@ -171,3 +171,16 @@ export const getContractByID = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Failed to get contract" });
   }
 };
+
+export const deletePolicy  = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    try{
+        await ContractAnalysisSchema.deleteOne({_id: id})
+        res.json({
+            success: true,
+        })
+    }
+    catch (e) {
+        console.error(e);
+    }
+}
