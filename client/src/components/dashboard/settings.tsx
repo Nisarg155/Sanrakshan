@@ -18,21 +18,15 @@ import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
 
 export default function Settings() {
-//   const {
-//     subscriptionStatus,
-//     isSubscriptionLoading,
-//     isSubscriptionError,
-//     setLoading,
-//   } = useSubscription();
+  const {
+    subscriptionStatus,
+    isSubscriptionLoading,
+    isSubscriptionError,
+    setLoading,
+  } = useSubscription();
   const { user } = useCurrentUser();
-//   console.log(subscriptionStatus);
 
-//   if (!subscriptionStatus) {
-//     return null;
-//   }
-
-//   const isActive = subscriptionStatus.status === "active";
-  const isActive =true;
+  const isActive = subscriptionStatus?  subscriptionStatus.status === "active" : false;
 
 
   if (!user) {
@@ -58,7 +52,7 @@ export default function Settings() {
               />
             </div>
             <div className="space-y-2">
-              <Label>Full Name</Label>
+              <Label>Email</Label>
               <Input
                 value={user.email}
                 id="email"

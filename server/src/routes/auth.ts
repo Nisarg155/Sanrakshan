@@ -15,9 +15,8 @@ router.get("/auth/google/callback",
 
 router.get("/api/auth/current-user", (req, res) => {
     if (req.isAuthenticated()) {
-        
-      res.send(flatted.stringify(req.user));
-      console.log((req.user));
+
+      res.send(req.user);
       
     } else {
       res.status(401).json({ error: "Unauthorized" });

@@ -65,6 +65,7 @@ export const detectAndConfirmContractType=async(req:Request,res:Response)=>{
 export const analyzeContract = async (req: Request, res: Response) => {
     const user = req.user as IUser;
     const { contractType } = req.body;
+
   
     if (!req.file) {
       return res.status(400).json({ error: "No file uploaded" });
@@ -84,9 +85,14 @@ export const analyzeContract = async (req: Request, res: Response) => {
       const pdfText = await extractTextToPdf(fileKey);
       let analysis:IContractAnalysis;
       console.log("called gemini");
-      
-      analysis=await analyzeContractWithAI(pdfText,"free",contractType) 
-      console.log("got anaylysis",analysis);
+
+        if (user.isPremium) {
+            analysis = await analyzeContractWithAI(pdfText, "premium", contractType);
+        } else {
+            analysis = await analyzeContractWithAI(pdfText, "free", contractType);
+        }
+
+
       res.json(analysis)
       
       if(!analysis.summary || !analysis.privacyRisks){
@@ -119,7 +125,7 @@ export const getUserContracts = async (req: Request, res: Response) => {
     const contracts = await ContractAnalysisSchema.find(
       query as FilterQuery<IContractAnalysis>
     ).sort({ createdAt: -1 });
-    console.log(contracts);
+
     
     res.json(contracts);
   } catch (error) {

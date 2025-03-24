@@ -13,6 +13,8 @@ import MongoStore from 'connect-mongo';
 import './config/passport';
 import authRoute from './routes/auth';
 import contractRoute from './routes/contract';
+import paymentsRoute from "./routes/payments";
+import {handleWebhook} from "./controllers/payment.controller";
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -33,6 +35,13 @@ app.options('*', cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 }))
+
+app.post(
+    "/payments/webhook",
+    express.raw({ type: "application/json" }),
+    handleWebhook
+);
+
 
 app.use(helmet());
 app.use(morgan('dev'));
@@ -71,6 +80,7 @@ app.use(express.json());
     // Routes
     app.use('/', authRoute);
     app.use('/api/contracts', contractRoute);
+    app.use("/api/payments", paymentsRoute);
 
     // Root route
     app.get('/', (req, res) => {

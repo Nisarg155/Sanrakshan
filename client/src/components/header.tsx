@@ -5,11 +5,11 @@ import {usePathname} from "next/navigation";
 import {cn} from "@/lib/utils";
 import {Button} from "@/components/ui/button";
 import {UserButton} from "@/components/shared/user-button";
+import Image from "next/image";
+
 
 const navItems: { name: string; href: string }[] = [
     {name: "Dashboard", href: "/dashboard"},
-    {name: "Pricing", href: "/pricing"},
-    {name: "Privacy Policy", href: "/privacy"},
 ];
 
 export function Header() {
@@ -24,8 +24,10 @@ export function Header() {
                 {/* Logo and Navigation */}
                 <div className="flex items-center space-x-6">
                     {/* Logo */}
+
                     <Link href="/" className="flex items-center space-x-2 text-lg font-semibold">
-                        Logo
+                        <Image src="/logo.png" alt="Sanrakshan Logo" width={30} height={30} />
+                        <span>Sanrakshan</span>
                     </Link>
 
                     {/* Navigation Links */}

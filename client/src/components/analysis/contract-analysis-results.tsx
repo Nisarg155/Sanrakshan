@@ -46,6 +46,7 @@ interface PrivacyAnalysisResultsProps {
 
 export default function PrivacyAnalysisResults({analysisResults, isActive}: PrivacyAnalysisResultsProps) {
     const [activeTab, setActiveTab] = useState("overview")
+    console.log(analysisResults)
 
     const getSeverityColor = (severity: string) => {
         switch (severity) {
@@ -267,47 +268,7 @@ export default function PrivacyAnalysisResults({analysisResults, isActive}: Priv
                     </Card>
                 </TabsContent>
 
-                {/*<TabsContent value="risks" className="mt-4">*/}
-                {/*    <Card>*/}
-                {/*        <CardHeader>*/}
-                {/*            <CardTitle>Privacy Risks</CardTitle>*/}
-                {/*            <CardDescription>Issues identified in the privacy policy</CardDescription>*/}
-                {/*        </CardHeader>*/}
-                {/*        <CardContent>*/}
-                {/*            {analysisResults.privacyRisks.length > 0 ? (*/}
-                {/*                <div className="space-y-4">*/}
-                {/*                    {analysisResults.privacyRisks.map((risk, index) => (*/}
-                {/*                        <Alert key={index} className="border-l-4"*/}
-                {/*                               style={{borderLeftColor: risk.severity === "high" ? "#ef4444" : risk.severity === "medium" ? "#f59e0b" : "#10b981"}}>*/}
-                {/*                            <div className="flex items-start">*/}
-                {/*                                {getSeverityIcon(risk.severity)}*/}
-                {/*                                <div className="ml-3 w-full">*/}
-                {/*                                    <div className="flex justify-between items-center">*/}
-                {/*                                        <AlertTitle>{risk.risk}</AlertTitle>*/}
-                {/*                                        <Badge className={getSeverityColor(risk.severity)}>*/}
-                {/*                                            {risk.severity.toUpperCase()}*/}
-                {/*                                        </Badge>*/}
-                {/*                                    </div>*/}
-                {/*                                    <AlertDescription className="mt-1">*/}
-                {/*                                        {risk.explanation}*/}
-                {/*                                    </AlertDescription>*/}
-                {/*                                </div>*/}
-                {/*                            </div>*/}
-                {/*                        </Alert>*/}
-                {/*                    ))}*/}
-                {/*                </div>*/}
-                {/*            ) : (*/}
-                {/*                <div className="text-center py-8">*/}
-                {/*                    <ShieldCheck className="h-12 w-12 text-green-500 mx-auto mb-4"/>*/}
-                {/*                    <h3 className="text-lg font-medium mb-1">No Privacy Risks Detected</h3>*/}
-                {/*                    <p className="text-muted-foreground">*/}
-                {/*                        The privacy policy appears to be compliant with best practices.*/}
-                {/*                    </p>*/}
-                {/*                </div>*/}
-                {/*            )}*/}
-                {/*        </CardContent>*/}
-                {/*    </Card>*/}
-                {/*</TabsContent>*/}
+
 
                 <TabsContent value="risks" className="mt-4">
                     <Card>
@@ -365,119 +326,6 @@ export default function PrivacyAnalysisResults({analysisResults, isActive}: Priv
                     </Card>
                 </TabsContent>
 
-                {/*<TabsContent value="data" className="mt-4">*/}
-                {/*    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">*/}
-                {/*        <Card>*/}
-                {/*            <CardHeader>*/}
-                {/*                <CardTitle>Data Collection</CardTitle>*/}
-                {/*                <CardDescription>Types of data collected from users</CardDescription>*/}
-                {/*            </CardHeader>*/}
-                {/*            <CardContent>*/}
-                {/*                {analysisResults.dataCollected.length > 0 ? (*/}
-                {/*                    <ul className="space-y-2">*/}
-                {/*                        {analysisResults.dataCollected.map((data, index) => (*/}
-                {/*                            <li key={index} className="flex items-center gap-2">*/}
-                {/*                                <span className="h-2 w-2 rounded-full bg-primary"></span>*/}
-                {/*                                {data}*/}
-                {/*                            </li>*/}
-                {/*                        ))}*/}
-                {/*                    </ul>*/}
-                {/*                ) : (*/}
-                {/*                    <p className="text-muted-foreground">No data collection details specified</p>*/}
-                {/*                )}*/}
-
-                {/*                <Separator className="my-4"/>*/}
-
-                {/*                <div>*/}
-                {/*                    <h3 className="text-sm font-medium mb-2">Data Retention Period</h3>*/}
-                {/*                    <p>{analysisResults.dataRetentionPeriod}</p>*/}
-                {/*                </div>*/}
-
-                {/*                {analysisResults.trackingTechnologies.length > 0 && (*/}
-                {/*                    <>*/}
-                {/*                        <Separator className="my-4"/>*/}
-                {/*                        <div>*/}
-                {/*                            <h3 className="text-sm font-medium mb-2">Tracking Technologies</h3>*/}
-                {/*                            <div className="flex flex-wrap gap-2">*/}
-                {/*                                {analysisResults.trackingTechnologies.map((tech, index) => (*/}
-                {/*                                    <Badge key={index} variant="outline">*/}
-                {/*                                        {tech}*/}
-                {/*                                    </Badge>*/}
-                {/*                                ))}*/}
-                {/*                            </div>*/}
-                {/*                        </div>*/}
-                {/*                    </>*/}
-                {/*                )}*/}
-                {/*            </CardContent>*/}
-                {/*        </Card>*/}
-
-                {/*        <Card>*/}
-                {/*            <CardHeader>*/}
-                {/*                <CardTitle>Data Usage & Sharing</CardTitle>*/}
-                {/*                <CardDescription>How collected data is used and shared</CardDescription>*/}
-                {/*            </CardHeader>*/}
-                {/*            <CardContent>*/}
-                {/*                <div className="mb-4">*/}
-                {/*                    <h3 className="text-sm font-medium mb-2">Data Usage</h3>*/}
-                {/*                    {analysisResults.dataUsage.length > 0 ? (*/}
-                {/*                        <ul className="space-y-2">*/}
-                {/*                            {analysisResults.dataUsage.map((usage, index) => (*/}
-                {/*                                <li key={index} className="flex items-center gap-2">*/}
-                {/*                                    <span className="h-2 w-2 rounded-full bg-primary"></span>*/}
-                {/*                                    {usage}*/}
-                {/*                                </li>*/}
-                {/*                            ))}*/}
-                {/*                        </ul>*/}
-                {/*                    ) : (*/}
-                {/*                        <p className="text-muted-foreground">No data usage details specified</p>*/}
-                {/*                    )}*/}
-                {/*                </div>*/}
-
-                {/*                <Separator className="my-4"/>*/}
-
-                {/*                <div>*/}
-                {/*                    <h3 className="text-sm font-medium mb-2">Data Sharing</h3>*/}
-                {/*                    {analysisResults.dataSharing.length > 0 ? (*/}
-                {/*                        <Table>*/}
-                {/*                            <TableHeader>*/}
-                {/*                                <TableRow>*/}
-                {/*                                    <TableHead>Entity</TableHead>*/}
-                {/*                                    <TableHead>Purpose</TableHead>*/}
-                {/*                                </TableRow>*/}
-                {/*                            </TableHeader>*/}
-                {/*                            <TableBody>*/}
-                {/*                                {analysisResults.dataSharing.map((sharing, index) => (*/}
-                {/*                                    <TableRow key={index}>*/}
-                {/*                                        <TableCell>{sharing.entity}</TableCell>*/}
-                {/*                                        <TableCell>{sharing.purpose}</TableCell>*/}
-                {/*                                    </TableRow>*/}
-                {/*                                ))}*/}
-                {/*                            </TableBody>*/}
-                {/*                        </Table>*/}
-                {/*                    ) : (*/}
-                {/*                        <p className="text-muted-foreground">No data sharing details specified</p>*/}
-                {/*                    )}*/}
-                {/*                </div>*/}
-
-                {/*                {analysisResults.policyJurisdiction.length > 0 && (*/}
-                {/*                    <>*/}
-                {/*                        <Separator className="my-4"/>*/}
-                {/*                        <div>*/}
-                {/*                            <h3 className="text-sm font-medium mb-2">Policy Jurisdiction</h3>*/}
-                {/*                            <div className="flex flex-wrap gap-2">*/}
-                {/*                                {analysisResults.policyJurisdiction.map((jurisdiction, index) => (*/}
-                {/*                                    <Badge key={index} variant="outline">*/}
-                {/*                                        {jurisdiction}*/}
-                {/*                                    </Badge>*/}
-                {/*                                ))}*/}
-                {/*                            </div>*/}
-                {/*                        </div>*/}
-                {/*                    </>*/}
-                {/*                )}*/}
-                {/*            </CardContent>*/}
-                {/*        </Card>*/}
-                {/*    </div>*/}
-                {/*</TabsContent>*/}
 
                 <TabsContent value="data" className="mt-4">
                     <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 transition-all ${!isActive ? "blur-sm pointer-events-none" : ""}`}>

@@ -3,7 +3,7 @@
 import ContractAnalysisResults from "@/components/analysis/contract-analysis-results";
 import EmptyState from "@/components/analysis/empty-state";
 import { useSubscription } from "@/hooks/use-subscription";
-import { api } from "@/lib/api";
+
 // import stripePromise from "@/lib/stripe";
 import { useContractStore } from "@/store/zustand";
 import { toast } from "sonner";
@@ -13,16 +13,13 @@ export default function ContractResultsPage() {
 
   const {
     subscriptionStatus,
-    isSubscriptionLoading,
-    isSubscriptionError,
-    setLoading,
   } = useSubscription();
 
-  // if (!subscriptionStatus) {
-  //   return <div>Loading...</div>;
-  // }
+  if (!subscriptionStatus) {
+    return <div>Loading...</div>;
+  }
 
-  // const isActive = subscriptionStatus.status === "active";
+  const isActive = subscriptionStatus ? subscriptionStatus.status === "active"  : false ;
 
   // const handleUpgrade = async () => {
   //   setLoading(true);
@@ -50,7 +47,7 @@ export default function ContractResultsPage() {
   return (
     <ContractAnalysisResults
       // contractId={analysisResults._id}
-      isActive={true}
+      isActive={isActive}
       analysisResults={analysisResults}
       // onUpgrade={handleUpgrade}
     />

@@ -125,8 +125,8 @@ export const analyzeContractWithAI = async (
   } else {
     prompt = `
    Analyze the following ${contractType} contract and provide:
-    1. A list of at least 10 potential risks for the party receiving the contract, each with a brief explanation and severity level (low, medium, high).
-    2. A list of at least 10 potential opportunities or benefits for the receiving party, each with a brief explanation and impact level (low, medium, high).
+    1. A list of at least 5 potential risks for the party receiving the contract, each with a brief explanation and severity level (low, medium, high).
+    2. A list of at least 5 potential opportunities or benefits for the receiving party, each with a brief explanation and impact level (low, medium, high).
     3. A comprehensive summary of the contract, including key terms and conditions.
     4. Any recommendations for improving the contract from the receiving party's perspective.
     5. A list of key clauses in the contract.
@@ -203,7 +203,7 @@ export const analyzeContractWithAI = async (
 
   try {
     // Attempt to fix common JSON errors
-    console.log("I'm in bro");
+
     
     text = text.replace(/([{,]\s*)(\w+)(\s*:)/g, '$1"$2"$3'); // Ensure all keys are quoted
     text = text.replace(/:\s*"([^"]*)"([^,}\]])/g, ': "$1"$2'); // Ensure all string values are properly quoted

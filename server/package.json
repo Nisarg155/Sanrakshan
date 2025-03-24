@@ -45,6 +45,8 @@
     "passport-local": "^1.0.0",
     "pdf-parse": "^1.1.1",
     "pdfjs": "^2.5.3",
-    "pdfjs-dist": "^4.10.38"
+    "pdfjs-dist": "^4.10.38",
+    "resend": "^4.1.2",
+    "stripe": "^17.7.0"
   }
 }
