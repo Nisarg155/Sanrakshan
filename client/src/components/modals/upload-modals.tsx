@@ -2,17 +2,17 @@ import {
     Dialog,
     DialogContent,
 } from "@/components/ui/dialog";
-import { api } from "@/lib/api";
-import { useContractStore } from "@/store/zustand";
-import { useMutation } from "@tanstack/react-query";
-import { useCallback, useState } from "react";
-import { useDropzone } from "react-dropzone";
-import { AnimatePresence, motion } from "framer-motion";
-import { Brain, FileText, Loader2, Sparkles, Trash } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "../ui/button";
+import {api} from "@/lib/api";
+import {useContractStore} from "@/store/zustand";
+import {useMutation} from "@tanstack/react-query";
+import {useCallback, useState} from "react";
+import {useDropzone} from "react-dropzone";
+import {AnimatePresence, motion} from "framer-motion";
+import {Brain, FileText, Loader2, Sparkles, Trash} from "lucide-react";
+import {cn} from "@/lib/utils";
+import {Button} from "../ui/button";
 // import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
-import { useRouter } from "next/navigation";
+import {useRouter} from "next/navigation";
 import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 
 interface IUploadModalProps {
@@ -26,7 +26,7 @@ export function UploadModal({
                                 onClose,
                                 onUploadComplete,
                             }: IUploadModalProps) {
-    const { setAnalysisResults } = useContractStore();
+    const {setAnalysisResults} = useContractStore();
     const router = useRouter();
 
     const [detectedType, setDetectedType] = useState<string | null>(null);
@@ -36,7 +36,7 @@ export function UploadModal({
         "upload" | "detecting" | "confirm" | "processing" | "done"
     >("upload");
 
-    const { mutate: detectContractType } = useMutation({
+    const {mutate: detectContractType} = useMutation({
         mutationFn: async (file: File) => {
             const formData = new FormData();
             formData.append("contract", file);
@@ -65,7 +65,7 @@ export function UploadModal({
         },
     });
 
-    const { mutate: uploadFile, isPending: isProcessing } = useMutation({
+    const {mutate: uploadFile, isPending: isProcessing} = useMutation({
         mutationFn: async ({
                                file,
                                contractType,
@@ -83,7 +83,7 @@ export function UploadModal({
                 },
             });
             console.log("Helloo dnei");
-            
+
             console.log(response.data);
             return response.data;
         },
@@ -109,7 +109,7 @@ export function UploadModal({
         }
     }, []);
 
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    const {getRootProps, getInputProps, isDragActive} = useDropzone({
         onDrop,
         accept: {
             "application/pdf": [".pdf"],
@@ -128,7 +128,7 @@ export function UploadModal({
     const handleAnalyzeContract = () => {
         if (files.length > 0 && detectedType) {
             setStep("processing");
-            uploadFile({ file: files[0], contractType: detectedType });
+            uploadFile({file: files[0], contractType: detectedType});
         }
     };
 
@@ -157,7 +157,7 @@ export function UploadModal({
                             >
                                 <input {...getInputProps()} />
                                 <motion.div>
-                                    <FileText className="mx-auto size-16 text-primary" />
+                                    <FileText className="mx-auto size-16 text-primary"/>
                                 </motion.div>
                                 <p className="mt-4 text-sm text-gray-600">
                                     Drag &apos;n&apos; drop some files here, or click to select
@@ -168,7 +168,8 @@ export function UploadModal({
                                 </p>
                             </div>
                             {files.length > 0 && (
-                                <div className="mt-4 bg-green-500/30 border border-green-500 border-dashed text-green-700 p-2 rounded flex items-center justify-between">
+                                <div
+                                    className="mt-4 bg-green-500/30 border border-green-500 border-dashed text-green-700 p-2 rounded flex items-center justify-between">
                   <span>
                     {files[0].name}{" "}
                       <span className="text-sm text-gray-600">
@@ -181,13 +182,13 @@ export function UploadModal({
                                         className="hover:bg-green-500"
                                         onClick={() => setFiles([])}
                                     >
-                                        <Trash className="size-5 hover:text-green-900" />
+                                        <Trash className="size-5 hover:text-green-900"/>
                                     </Button>
                                 </div>
                             )}
                             {files.length > 0 && !isProcessing && (
                                 <Button className="mt-4 w-full mb-4" onClick={handleFileUpload}>
-                                    <Sparkles className="mr-2 size-4" />
+                                    <Sparkles className="mr-2 size-4"/>
                                     Analyze Privacy Policy With AI
                                 </Button>
                             )}
@@ -199,7 +200,7 @@ export function UploadModal({
                 return (
                     <AnimatePresence>
                         <motion.div className="flex flex-col items-center justify-center py-8">
-                            <Loader2 className="size-16 animate-spin text-primary" />
+                            <Loader2 className="size-16 animate-spin text-primary"/>
                             <p className="mt-4 text-lg font-semibold">
                                 Detecting contract type...
                             </p>
@@ -216,10 +217,16 @@ export function UploadModal({
                                     We have detected the following contract type:
                                     <span className="font-semibold"> {detectedType}</span>
                                 </p>
-                                <p>Would you like to analyze this contract with our AI?</p>
+                                {
+                                    detectedType === "Other" ?
+                                        <p>Please Upload any Privacy Policy or Terms and Condition , not other Doc</p> :
+                                        <p>Would you like to analyze this contract with our AI?</p>
+                                }
+
                             </div>
                             <div className="flex space-x-4">
-                                <Button onClick={handleAnalyzeContract}>
+
+                                <Button disabled={detectedType === "Other"} onClick={handleAnalyzeContract}>
                                     Yes, I want to analyze it
                                 </Button>
                                 <Button
@@ -238,9 +245,9 @@ export function UploadModal({
                 return (
                     <AnimatePresence>
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.9 }}
+                            initial={{opacity: 0, scale: 0.9}}
+                            animate={{opacity: 1, scale: 1}}
+                            exit={{opacity: 0, scale: 0.9}}
                             className="flex flex-col items-center justify-center py-8"
                         >
                             <motion.div
@@ -254,35 +261,35 @@ export function UploadModal({
                                     ease: "easeInOut",
                                 }}
                             >
-                                <Brain className="size-20 text-primary" />
+                                <Brain className="size-20 text-primary"/>
                             </motion.div>
                             <motion.p
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.5 }}
+                                initial={{opacity: 0, y: 20}}
+                                animate={{opacity: 1, y: 0}}
+                                transition={{delay: 0.5}}
                                 className="mt-6 text-lg font-semibold text-gray-700"
                             >
                                 AI is analyzing your contract...
                             </motion.p>
                             <motion.p
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 1 }}
+                                initial={{opacity: 0}}
+                                animate={{opacity: 1}}
+                                transition={{delay: 1}}
                                 className="mt-2 text-sm text-gray-700"
                             >
                                 This may take some time.
                             </motion.p>
                             <motion.div
                                 className="w-64 h-2 bg-gray-200 rounded-full mt-6 overflow-hidden"
-                                initial={{ width: 0 }}
-                                animate={{ width: "100%" }}
-                                transition={{ duration: 10, ease: "linear" }}
+                                initial={{width: 0}}
+                                animate={{width: "100%"}}
+                                transition={{duration: 10, ease: "linear"}}
                             >
                                 <motion.div
                                     className="h-full bg-primary"
-                                    initial={{ width: "0%" }}
-                                    animate={{ width: "100%" }}
-                                    transition={{ duration: 10, ease: "linear" }}
+                                    initial={{width: "0%"}}
+                                    animate={{width: "100%"}}
+                                    transition={{duration: 10, ease: "linear"}}
                                 />
                             </motion.div>
                         </motion.div>
@@ -296,7 +303,7 @@ export function UploadModal({
                             <Alert className="mt-4">
                                 <AlertTitle>Analysis completed</AlertTitle>
                                 <AlertDescription>
-                                    Your Policy  has been analyzed. you can now view the results.
+                                    Your Policy has been analyzed. you can now view the results.
                                 </AlertDescription>
                             </Alert>
 

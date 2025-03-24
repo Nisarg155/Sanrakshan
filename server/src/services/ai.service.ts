@@ -42,7 +42,7 @@ export const extractTextToPdf = async (filekey: string) => {
 export const detectPrivacyType = async (privacyText: string): Promise<string> => {
   const prompt = `
   Analyze the following contract text and determine the type of contract it is.
-  Provide only the contract type as a single string (e.g., "Employment", "Non-Disclosure Agreement", "Sales", "Lease", etc.).
+  If the contract type is (eg "Privacy Policy" , "Terms and Condition","Privacy Notice" etc.) return Privacy Policy or Terms and Condition only else Return Other.
   Do not include any additional explanation or text.
 
   Contract text: ${privacyText.substring(0, 2000)}

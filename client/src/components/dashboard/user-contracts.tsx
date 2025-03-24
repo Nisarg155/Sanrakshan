@@ -2,7 +2,6 @@ import {ContractAnalysis} from "@/interfaces/contract.interface";
 import {api} from "@/lib/api";
 import {useQuery} from "@tanstack/react-query";
 import {useState} from "react";
-
 import {
     ColumnDef,
     flexRender,
@@ -24,7 +23,6 @@ import {
     TableRow,
 } from "../ui/table";
 import {UploadModal} from "../modals/upload-modals";
-import {cn} from "@/lib/utils";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -168,8 +166,8 @@ export default function UserContracts() {
     return (
         <div className="container mx-auto p-6 space-y-8">
             <div className="flex justify-between items-center">
-                <h1 className="text-3xl font-bold">Your Contracts</h1>
-                <Button onClick={() => setIsUploadModalOpen(true)}>New Contract</Button>
+                <h1 className="text-3xl font-bold">Your Policies</h1>
+                <Button onClick={() => setIsUploadModalOpen(true)}>New Policy</Button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
