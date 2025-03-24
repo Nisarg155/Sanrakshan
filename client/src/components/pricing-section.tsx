@@ -43,21 +43,21 @@ export function PricingSection() {
                     price="Free"
                     period="/lifetime"
                     features={[
-                        "Advanced contract analysis",
-                        "Unlimited projects",
-                        "Chat with your contract",
-                        "10+ risks with severity levels",
-                        "10+ opportunities with impact levels",
-                        "Comprehensive contract summary",
+                        "Advanced Privacy Policy Analysis",
+                        "Unlimited Policy Reviews",
+                        "AI-powered Insights on Privacy Policies",
+                        "10+ Privacy Risks with Severity Levels",
+                        "10+ Compliance Issues with Impact Levels",
+                        "Comprehensive Policy Summary",
                         "Improvement recommendations",
                         "Key clauses identification",
-                        "Legal compliance assessment",
-                        "Negotiation points",
-                        "Contract duration analysis",
-                        "Termination conditions summary",
+                        "User Data Handling Insights",
+                        "Policy Duration & Updates Analysis",
+                        "Third-party Data Sharing Summary",
+                        "Data Retention & Deletion Policies Breakdown",
                         "Compensation structure breakdown",
-                        "Performance metrics identification",
-                        "Intellectual property clause summary",
+                        "Security & Encryption Policy Evaluation",
+                        "User Control & Consent Mechanisms Overview",
                     ]}
                     buttonText="Upgrade"
                     onButtonClick={handleUpgrade}
@@ -69,21 +69,21 @@ export function PricingSection() {
                     highlight
                     period="/lifetime"
                     features={[
-                        "Advanced contract analysis",
-                        "Unlimited projects",
-                        "Chat with your contract",
-                        "10+ risks with severity levels",
-                        "10+ opportunities with impact levels",
-                        "Comprehensive contract summary",
+                        "Advanced Privacy Policy Analysis",
+                        "Unlimited Policy Reviews",
+                        "AI-powered Insights on Privacy Policies",
+                        "10+ Privacy Risks with Severity Levels",
+                        "10+ Compliance Issues with Impact Levels",
+                        "Comprehensive Policy Summary",
                         "Improvement recommendations",
                         "Key clauses identification",
-                        "Legal compliance assessment",
-                        "Negotiation points",
-                        "Contract duration analysis",
-                        "Termination conditions summary",
+                        "User Data Handling Insights",
+                        "Policy Duration & Updates Analysis",
+                        "Third-party Data Sharing Summary",
+                        "Data Retention & Deletion Policies Breakdown",
                         "Compensation structure breakdown",
-                        "Performance metrics identification",
-                        "Intellectual property clause summary",
+                        "Security & Encryption Policy Evaluation",
+                        "User Control & Consent Mechanisms Overview",
                     ]}
                     buttonText="Upgrade"
                     onButtonClick={handleUpgrade}
