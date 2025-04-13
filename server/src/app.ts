@@ -14,7 +14,7 @@ import './config/passport';
 import authRoute from './routes/auth';
 import contractRoute from './routes/contract';
 import paymentsRoute from "./routes/payments";
-import {handleWebhook} from "./controllers/payment.controller";
+// import {handleWebhook} from "./controllers/payment.controller";
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -36,11 +36,7 @@ app.options('*', cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 }))
 
-app.post(
-    "/payments/webhook",
-    express.raw({ type: "application/json" }),
-    handleWebhook
-);
+
 
 
 app.use(helmet());

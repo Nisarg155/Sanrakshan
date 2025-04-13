@@ -1,5 +1,5 @@
-import { api } from "@/lib/api";
-// import stripePromise from "@/lib/stripe";
+'use client'
+
 import {
     Card,
     CardContent,
@@ -8,25 +8,25 @@ import {
     CardHeader,
     CardTitle,
 } from "./ui/card";
-import { Button } from "./ui/button";
+
+import { Button } from "@/components/ui/button";
+import {
+    Dialog,
+    DialogTrigger,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+} from "@/components/ui/dialog";
+import PaymentStatusDialog from "@/components/shared/paymentsatusdialogue"
+
+import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { useState } from "react";
+import {useMutation} from "@tanstack/react-query";
+import {api} from "@/lib/api";
 
 export function PricingSection() {
-    // const handleUpgrade = async () => {
-    //     try {
-    //         const response = await api.get("/payments/create-checkout-session");
-    //         const stripe = await stripePromise;
-    //         await stripe?.redirectToCheckout({
-    //             sessionId: response.data.sessionId,
-    //         });
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // };
-
-    const handleUpgrade = () => {
-        console.log('hello')
-    }
-
     return (
         <div className="container mx-auto px-4 py-16 bg-gradient-to-b from-background to-background/80">
             <h2 className="text-4xl font-extrabold tracking-tight sm:text-5xl text-center">
@@ -42,25 +42,8 @@ export function PricingSection() {
                     description="For comprehensive contract analysis"
                     price="Free"
                     period="/lifetime"
-                    features={[
-                        "Advanced Privacy Policy Analysis",
-                        "Unlimited Policy Reviews",
-                        "AI-powered Insights on Privacy Policies",
-                        "10+ Privacy Risks with Severity Levels",
-                        "10+ Compliance Issues with Impact Levels",
-                        "Comprehensive Policy Summary",
-                        "Improvement recommendations",
-                        "Key clauses identification",
-                        "User Data Handling Insights",
-                        "Policy Duration & Updates Analysis",
-                        "Third-party Data Sharing Summary",
-                        "Data Retention & Deletion Policies Breakdown",
-                        "Compensation structure breakdown",
-                        "Security & Encryption Policy Evaluation",
-                        "User Control & Consent Mechanisms Overview",
-                    ]}
+                    features={FEATURES}
                     buttonText="Upgrade"
-                    onButtonClick={handleUpgrade}
                 />
                 <PricingCard
                     title="Premium"
@@ -68,30 +51,31 @@ export function PricingSection() {
                     price="$100"
                     highlight
                     period="/lifetime"
-                    features={[
-                        "Advanced Privacy Policy Analysis",
-                        "Unlimited Policy Reviews",
-                        "AI-powered Insights on Privacy Policies",
-                        "10+ Privacy Risks with Severity Levels",
-                        "10+ Compliance Issues with Impact Levels",
-                        "Comprehensive Policy Summary",
-                        "Improvement recommendations",
-                        "Key clauses identification",
-                        "User Data Handling Insights",
-                        "Policy Duration & Updates Analysis",
-                        "Third-party Data Sharing Summary",
-                        "Data Retention & Deletion Policies Breakdown",
-                        "Compensation structure breakdown",
-                        "Security & Encryption Policy Evaluation",
-                        "User Control & Consent Mechanisms Overview",
-                    ]}
+                    features={FEATURES}
                     buttonText="Upgrade"
-                    onButtonClick={handleUpgrade}
                 />
             </div>
         </div>
     );
 }
+
+const FEATURES = [
+    "Advanced Privacy Policy Analysis",
+    "Unlimited Policy Reviews",
+    "AI-powered Insights on Privacy Policies",
+    "10+ Privacy Risks with Severity Levels",
+    "10+ Compliance Issues with Impact Levels",
+    "Comprehensive Policy Summary",
+    "Improvement recommendations",
+    "Key clauses identification",
+    "User Data Handling Insights",
+    "Policy Duration & Updates Analysis",
+    "Third-party Data Sharing Summary",
+    "Data Retention & Deletion Policies Breakdown",
+    "Compensation structure breakdown",
+    "Security & Encryption Policy Evaluation",
+    "User Control & Consent Mechanisms Overview",
+];
 
 interface PricingCardProps {
     title: string;
@@ -101,7 +85,6 @@ interface PricingCardProps {
     features: string[];
     buttonText: string;
     highlight?: boolean;
-    onButtonClick: () => void;
 }
 
 function PricingCard({
@@ -110,10 +93,69 @@ function PricingCard({
                          price,
                          features,
                          period,
-                         buttonText,
                          highlight,
-                         onButtonClick,
                      }: PricingCardProps) {
+    const { user } = useCurrentUser();
+    const [dialogOpen, setDialogOpen] = useState(false);
+
+
+    const createOrderMutation = useMutation({
+        mutationFn: async () => {
+            const res = await api.post("/payments/create-order");
+            return res.data;
+        },
+    });
+
+    const captureOrderMutation = useMutation({
+        mutationFn: async (data: { orderID: string; userId: string }) => {
+            const res = await api.post("/payments/capture-order", data);
+            return res.data;
+        },
+    });
+
+// Then in the PayPalButtons config:
+    const createOrder = async () => {
+        const res = await createOrderMutation.mutateAsync();
+        return res.orderId;
+    };
+
+
+    const [statusDialogOpen, setStatusDialogOpen] = useState(false);
+    const [paymentSuccess, setPaymentSuccess] = useState<boolean | null>(null);
+
+    const Success = "/success.png";
+    const Failure = "/failure.png";
+
+    // const onApprove = async (data: any) => {
+    //     if (!user) return;
+    //
+    //     const details = await captureOrderMutation.mutateAsync({
+    //         orderID: data.orderID,
+    //         userId: user._id,
+    //     });
+    //
+    //
+    //     setDialogOpen(false);
+    // };
+
+    const onApprove = async (data: any) => {
+        if (!user) return;
+
+        try {
+            const details = await captureOrderMutation.mutateAsync({
+                orderID: data.orderID,
+                userId: user._id,
+            });
+
+            setPaymentSuccess(true);
+            setStatusDialogOpen(true);
+            setDialogOpen(false);
+        } catch (error) {
+            setPaymentSuccess(false);
+            setStatusDialogOpen(true);
+        }
+    };
+
     return (
         <Card
             className={`flex flex-col ${
@@ -130,8 +172,8 @@ function PricingCard({
                 <p className="text-5xl font-extrabold mb-6">
                     {price}
                     <span className="text-base font-normal text-muted-foreground">
-            {period}
-          </span>
+                        {period}
+                    </span>
                 </p>
                 <ul className="space-y-2">
                     {features.map((feature, index) => (
@@ -142,13 +184,28 @@ function PricingCard({
                 </ul>
             </CardContent>
             <CardFooter>
-                <Button
-                    className="w-full"
-                    variant={highlight ? "default" : "outline"}
-                    onClick={onButtonClick}
-                >
-                    {buttonText}
-                </Button>
+                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                    <DialogTrigger asChild>
+                        <Button className="w-full">{title === "Premium" ? "Upgrade" : "Free"}</Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-md">
+                        <DialogHeader>
+                            <DialogTitle>Complete Payment</DialogTitle>
+                            <DialogDescription>
+                                Confirm your upgrade to the <strong>{title}</strong> plan.
+                            </DialogDescription>
+                        </DialogHeader>
+                        <PayPalScriptProvider options={{ clientId: "AW-iR0h5bySXlIhsss-V29i3DEnU8rr2JcygPvwP8jiZRBaputpEok0YIhBPjBCoy2ISeWdlYmSsDnzR" }}>
+                            <PayPalButtons createOrder={createOrder} onApprove={onApprove} />
+                        </PayPalScriptProvider>
+                    </DialogContent>
+                </Dialog>
+                <PaymentStatusDialog
+                    open={statusDialogOpen}
+                    onClose={() => setStatusDialogOpen(false)}
+                    isSuccess={paymentSuccess === true}
+                    imageSrc={paymentSuccess ? Success : Failure}
+                />
             </CardFooter>
         </Card>
     );
