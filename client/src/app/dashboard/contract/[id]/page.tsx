@@ -1,4 +1,3 @@
-"use client";
 
 import ContractResults from "./_components/contract-results";
 
