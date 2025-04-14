@@ -13,7 +13,7 @@ export default function Home() {
         <>
             <HeroSection />
             {
-                user.isPremium ? null : <PricingSection />
+                user?.isPremium ? null : <PricingSection />
             }
 
         </>

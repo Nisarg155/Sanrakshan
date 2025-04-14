@@ -37,6 +37,7 @@ interface IPrivacyAnalysis {
     gdprCompliance: boolean
     ccpaCompliance: boolean
     otherRegulations: string[]
+    overallScore:any
 }
 
 interface PrivacyAnalysisResultsProps {
@@ -75,25 +76,26 @@ export default function PrivacyAnalysisResults({analysisResults, isActive}: Priv
     }
 
     const calculateComplianceScore = () => {
-        let score = 50 // Base score
+        // let score = 50 // Base score
 
-        // Add points for compliance
-        if (analysisResults.gdprCompliance) score += 15
-        if (analysisResults.ccpaCompliance) score += 15
+        // // Add points for compliance
+        // if (analysisResults.gdprCompliance) score += 15
+        // if (analysisResults.ccpaCompliance) score += 15
 
-        // Deduct points for risks
-        const highRisks = analysisResults.privacyRisks.filter((r) => r.severity === "high").length
-        const mediumRisks = analysisResults.privacyRisks.filter((r) => r.severity === "medium").length
+        // // Deduct points for risks
+        // const highRisks = analysisResults.privacyRisks.filter((r) => r.severity === "high").length
+        // const mediumRisks = analysisResults.privacyRisks.filter((r) => r.severity === "medium").length
 
-        score -= highRisks * 10
-        score -= mediumRisks * 5
+        // score -= highRisks * 10
+        // score -= mediumRisks * 5
 
-        // Add points for user rights and transparency
-        if (analysisResults.userRights.length > 0) score += 10
-        if (analysisResults.dataRetentionPeriod !== "Unknown") score += 5
+        // // Add points for user rights and transparency
+        // if (analysisResults.userRights.length > 0) score += 10
+        // if (analysisResults.dataRetentionPeriod !== "Unknown") score += 5
 
-        // Ensure score is between 0 and 100
-        return Math.max(0, Math.min(100, score))
+        // // Ensure score is between 0 and 100
+        // return Math.max(0, Math.min(100, score))
+        return analysisResults.overallScore
     }
 
     const complianceScore = calculateComplianceScore()

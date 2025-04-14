@@ -92,7 +92,8 @@ export const analyzeContract = async (req: Request, res: Response) => {
             analysis = await analyzeContractWithAI(pdfText, "free", contractType);
         }
 
-
+        console.log(analysis);
+        
       res.json(analysis)
       
       if(!analysis.summary || !analysis.privacyRisks){
