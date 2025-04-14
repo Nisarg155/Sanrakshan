@@ -8,11 +8,11 @@ import {notFound} from "next/navigation";
 import {useEffect, useState} from "react";
 import {useSubscription} from "@/hooks/use-subscription";
 
-interface PageProps {
-    params: { id: string };
+interface ContractResultsProps {
+    contractId: string;
   }
-export default function ContractResults({params}: PageProps) {
-    const contractId = params.id;
+export default function ContractResults({contractId }: ContractResultsProps) {
+    // const contractId = params.id;
     const {user} = useCurrentUser();
     const [analysisResults, setAnalysisResults] = useState<any>();
     const [loading, setLoading] = useState<boolean>(true);
