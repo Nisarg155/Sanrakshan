@@ -2,17 +2,17 @@
 
 import ContractAnalysisResults from "@/components/analysis/contract-analysis-results";
 import {useCurrentUser} from "@/hooks/use-current-user";
-import {ContractAnalysis} from "@/interfaces/contract.interface";
+// import {ContractAnalysis} from "@/interfaces/contract.interface";
 import {api} from "@/lib/api";
 import {notFound} from "next/navigation";
 import {useEffect, useState} from "react";
 import {useSubscription} from "@/hooks/use-subscription";
 
-interface IContractResultsProps {
-    contractId: string;
-}
-
-export default function ContractResults({contractId}: IContractResultsProps) {
+interface PageProps {
+    params: { id: string };
+  }
+export default function ContractResults({params}: PageProps) {
+    const contractId = params.id;
     const {user} = useCurrentUser();
     const [analysisResults, setAnalysisResults] = useState<any>();
     const [loading, setLoading] = useState<boolean>(true);
