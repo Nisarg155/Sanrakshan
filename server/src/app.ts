@@ -75,8 +75,8 @@ app.use(express.json());
 
     // Routes
     app.use('/', authRoute);
-    app.use('/api/contracts', contractRoute);
-    app.use("/api/payments", paymentsRoute);
+    app.use('/contracts', contractRoute);
+    app.use("/payments", paymentsRoute);
 
     // Root route
     app.get('/', (req, res) => {
