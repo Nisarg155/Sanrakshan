@@ -10,7 +10,7 @@ export const useCurrentUser = () => {
         queryKey: ["currentUser"],
         queryFn: async () => {
             try {
-                const response = await api.get("/auth/current-user");
+                const response = await api.get("/api/auth/current-user");
                 return response.data;
             } catch (error) {
                 console.error(error);
