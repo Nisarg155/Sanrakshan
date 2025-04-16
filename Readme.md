@@ -130,9 +130,7 @@ This model is based on Legal-BERT and has been fine-tuned to understand and cate
 --- 
 
 
-Absolutely! Here's a more thoughtful and polished version of the **Contributors** section with a warm touch:
 
----
 
 ## 👥 Contributors
 
