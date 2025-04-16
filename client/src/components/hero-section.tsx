@@ -85,14 +85,20 @@ export function HeroSection() {
                             Get Started
                             <ArrowRight className="ml-2 size-5"/>
                         </Button>
-                        <Button
-                            className="inline-flex items-center justify-center text-lg"
-                            size={"lg"}
-                            variant={"outline"}
+                        <a
+                            href="https://github.com/Nisarg155/Sanrakshan"
+                            target="_blank"
+                            rel="noopener noreferrer"
                         >
-                            Learn More
-                            <Globe className="ml-2 size-5"/>
-                        </Button>
+                            <Button
+                                className="inline-flex items-center justify-center text-lg"
+                                size="lg"
+                                variant="outline"
+                            >
+                                Learn More
+                                <Globe className="ml-2 size-5"/>
+                            </Button>
+                        </a>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full mb-12">
