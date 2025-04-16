@@ -15,6 +15,7 @@ import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
+import Link from "next/link";
 
 function googleSignIn(): Promise<void> {
     return new Promise((resolve) => {
@@ -82,7 +83,7 @@ export function ConnectAccountModal() {
                             htmlFor="terms"
                             className="text-sm text-gray-500 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                         >
-                            I agree to the terms and conditions
+                            I agree to the <Link href={'/privacy-policy'} className={'underline font-bold font-black'}>Privacy Policy</Link>
                         </Label>
                     </div>
                 </div>
