@@ -10,6 +10,7 @@ import Image from "next/image";
 
 const navItems: { name: string; href: string }[] = [
     {name: "Dashboard", href: "/dashboard"},
+    {name: "Privacy Policy", href: "/privacy-policy"},
 ];
 
 export function Header() {
