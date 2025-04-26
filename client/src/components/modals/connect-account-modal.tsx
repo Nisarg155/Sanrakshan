@@ -1,9 +1,9 @@
 "use client";
 
-import { useModalStore } from "@/store/zustand";
-import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
-import { toast } from "sonner";
+import {useModalStore} from "@/store/zustand";
+import {useMutation} from "@tanstack/react-query";
+import {useState} from "react";
+import {toast} from "sonner";
 import {
     Dialog,
     DialogContent,
@@ -11,10 +11,10 @@ import {
     DialogHeader,
     DialogTitle,
 } from "../ui/dialog";
-import { Button } from "../ui/button";
-import { Loader2 } from "lucide-react";
-import { Checkbox } from "../ui/checkbox";
-import { Label } from "../ui/label";
+import {Button} from "../ui/button";
+import {Loader2} from "lucide-react";
+import {Checkbox} from "../ui/checkbox";
+import {Label} from "../ui/label";
 import Link from "next/link";
 
 function googleSignIn(): Promise<void> {
@@ -27,7 +27,7 @@ function googleSignIn(): Promise<void> {
 export function ConnectAccountModal() {
     const [isAgreed, setIsAgreed] = useState(false);
     const modalKey = "connectAccountModal";
-    const { isOpen, closeModal } = useModalStore();
+    const {isOpen, closeModal} = useModalStore();
 
     const mutation = useMutation({
         mutationFn: googleSignIn,
@@ -68,7 +68,7 @@ export function ConnectAccountModal() {
                         className="w-full"
                     >
                         {mutation.isPending ? (
-                            <Loader2 className="mr-2 size-4 animate-spin" />
+                            <Loader2 className="mr-2 size-4 animate-spin"/>
                         ) : (
                             <>Sign in with Google</>
                         )}
@@ -83,7 +83,8 @@ export function ConnectAccountModal() {
                             htmlFor="terms"
                             className="text-sm text-gray-500 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                         >
-                            I agree to the <Link href={'/privacy-policy'} className={'underline font-bold font-black'}>Privacy Policy</Link>
+                            I agree to the <Link href={'/privacy-policy'} onClick={() => closeModal(modalKey)}
+                                                 className={'underline font-bold font-black'}>Privacy Policy</Link>
                         </Label>
                     </div>
                 </div>

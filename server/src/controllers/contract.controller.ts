@@ -6,18 +6,6 @@ import { analyzeContractWithAI, detectPrivacyType, extractTextToPdf } from '../s
 import ContractAnalysisSchema,{ IContractAnalysis } from '../models/contract.model';
 import mongoose, { FilterQuery } from 'mongoose';
 
-// const upload=multer({
-//     storage:multer.memoryStorage(),
-//     fileFilter:(req,file,cb)=>{
-//         if(file.mimetype.startsWith("image/")){
-//             cb(null,true);
-//         }else{
-//             cb(null,false)
-//             cb(new Error("Only images are allowed"));
-//         }
-//     }
-// }).single("contract")
-
 const upload = multer({
   storage: multer.memoryStorage(),
   fileFilter: (req, file, cb) => {
