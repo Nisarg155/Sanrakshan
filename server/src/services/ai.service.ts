@@ -87,7 +87,11 @@ export const analyzeContractWithAI = async (
   ],
   "summary": "Provide a comprehensive summary of the privacy policy",
   "recommendations": [
-    "Provide actionable recommendations for end user to use the services provided and how to use it to save themselves"
+    "Based on the app's privacy policy, give clear and actionable recommendations for end users who will be using this app. The goal is to help them understand how to protect their privacy and use the app safely. Analyze the permissions and data usage mentioned, and advise users on best practices—such as when to limit or disable certain permissions.
+
+For example, if the policy mentions requesting continuous access to sensitive features like the camera, location, or microphone, advise users to be cautious. Suggest only granting access when necessary, and disabling permissions when not in use—unless the user fully trusts the app.
+
+Ensure the recommendations are generalizable and tailored based on what the policy actually says, rather than being static or biased toward one specific permission type."
   ],
   "keyClauses": [
     "List important clauses relevant to data privacy and security"
@@ -150,7 +154,11 @@ export const analyzeContractWithAI = async (
   ],
   "summary": "Provide a comprehensive summary of the privacy policy",
   "recommendations": [
-    "Provide actionable recommendations for end user to use the services provided and how to use it to save themselves"
+    "Based on the app's privacy policy, give clear and actionable recommendations for end users who will be using this app. The goal is to help them understand how to protect their privacy and use the app safely. Analyze the permissions and data usage mentioned, and advise users on best practices—such as when to limit or disable certain permissions.
+
+For example, if the policy mentions requesting continuous access to sensitive features like the camera, location, or microphone, advise users to be cautious. Suggest only granting access when necessary, and disabling permissions when not in use—unless the user fully trusts the app.
+
+Ensure the recommendations are generalizable and tailored based on what the policy actually says, rather than being static or biased toward one specific permission type."
   ],
   "keyClauses": [
     "List important clauses relevant to data privacy and security"

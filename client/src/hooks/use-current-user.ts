@@ -6,6 +6,7 @@ export const useCurrentUser = () => {
         isLoading,
         isError,
         data: user,
+        error
     } = useQuery({
         queryKey: ["currentUser"],
         queryFn: async () => {
@@ -13,10 +14,11 @@ export const useCurrentUser = () => {
                 const response = await api.get("/api/auth/current-user");
                 return response.data;
             } catch (error) {
-                console.error(error);
+                // console.error(error);
                 return null;
             }
         },
+        refetchOnWindowFocus:false
     });
 
     return { isLoading, isError, user };

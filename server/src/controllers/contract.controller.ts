@@ -46,7 +46,7 @@ export const detectAndConfirmContractType=async(req:Request,res:Response)=>{
         const fileKey=`file${user._id}:${Date.now()}`
         // const fileKey="abckavya";
         await redis.set(fileKey,req.file.buffer)
-        await redis.expire(fileKey,3600)
+        await redis.expire(fileKey,600)
 
         const pdfText=await extractTextToPdf(fileKey)
         const detectedType=await detectPrivacyType(pdfText)
@@ -79,7 +79,7 @@ export const analyzeContract = async (req: Request, res: Response) => {
       const fileKey = `file:${user._id}:${Date.now()}`;
       // const fileKey = `file:kavya:${Date.now()}`;
       await redis.set(fileKey, req.file.buffer);
-      await redis.expire(fileKey, 3600); // 1 hour
+      await redis.expire(fileKey, 600); // 1 hour
       console.log("redis");
       
       const pdfText = await extractTextToPdf(fileKey);
@@ -164,7 +164,7 @@ export const getContractByID = async (req: Request, res: Response) => {
     }
 
     //Cache the results for future requests
-    await redis.set(`contract:${id}`, contract, { ex: 3600 }); // 1 hour
+    await redis.set(`contract:${id}`, contract, { ex: 600 }); // 1 hour
 
     res.json(contract);
   } catch (error) {

@@ -1,6 +1,7 @@
 import {
     Dialog,
     DialogContent,
+    DialogTitle,
 } from "@/components/ui/dialog";
 import {api} from "@/lib/api";
 import {useContractStore} from "@/store/zustand";
@@ -324,6 +325,8 @@ export function UploadModal({
 
     return (
         <Dialog open={isOpen} onOpenChange={handleClose}>
+            <DialogTitle role="presentation" aria-hidden="true">
+    </DialogTitle>
             <DialogContent>{renderContent()}</DialogContent>
         </Dialog>
     );

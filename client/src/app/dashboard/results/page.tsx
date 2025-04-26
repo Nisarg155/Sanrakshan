@@ -46,9 +46,9 @@ export default function ContractResultsPage() {
 
   return (
     <ContractAnalysisResults
-      // contractId={analysisResults._id}
+      id={analysisResults._id}
       isActive={isActive}
-      analysisResults={analysisResults}
+      // analysisResults={analysisResults}
       // onUpgrade={handleUpgrade}
     />
   );
