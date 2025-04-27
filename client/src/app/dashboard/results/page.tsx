@@ -43,7 +43,8 @@ export default function ContractResultsPage() {
   if (!analysisResults) {
     return <EmptyState title="No Analysis" description="Please try again" />;
   }
-
+  console.log("I am result", analysisResults);
+    
   return (
     <ContractAnalysisResults
       id={analysisResults._id}

@@ -78,6 +78,7 @@ export const analyzeContractWithAI = async (
 
     Format your response as a JSON object with the following structure:
     {
+    "overallScore": "Give overall score to this policy from 0-100%",
   "privacyRisks": [
     {
       "risk": "Describe the identified risk",
@@ -145,6 +146,7 @@ Ensure the recommendations are generalizable and tailored based on what the poli
 
     Format your response as a JSON object with the following structure:
     {
+    "overallScore": "Give overall score to this policy from 0-100%",
   "privacyRisks": [
     {
       "risk": "Describe the identified risk",

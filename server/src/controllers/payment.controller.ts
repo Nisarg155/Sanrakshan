@@ -88,6 +88,8 @@ export const captureOrderHandler = async (req: Request, res: Response) => {
             console.log(`✅ User ${userId} upgraded to premium`);
 
             if (user?.email) {
+                console.log("Called");
+                
                 await sendPremiumConfirmationEmail(user.email, user.displayName);
             }
         }

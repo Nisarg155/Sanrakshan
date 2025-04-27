@@ -94,20 +94,20 @@ export const analyzeContract = async (req: Request, res: Response) => {
 
         console.log(analysis);
         
-      res.json(analysis)
-      
-      if(!analysis.summary || !analysis.privacyRisks){
-        throw new Error("Failed to analyze contract");
-      }
-
-      const savedAnalysis=await ContractAnalysisSchema.create({
-        userId:user._id,
-        contractText:pdfText,
-        contractType,
-        ...(analysis as Partial<IContractAnalysis>),
-        language:"en",
-        aiModel:"gemini-pro"
-      })
+        
+        if(!analysis.summary || !analysis.privacyRisks){
+          throw new Error("Failed to analyze contract");
+        }
+        
+        const savedAnalysis=await ContractAnalysisSchema.create({
+          userId:user._id,
+          contractText:pdfText,
+          contractType,
+          ...(analysis as Partial<IContractAnalysis>),
+          language:"en",
+          aiModel:"gemini-pro"
+        })
+        res.json(savedAnalysis)
 
     }catch(error){
 
@@ -164,7 +164,7 @@ export const getContractByID = async (req: Request, res: Response) => {
     }
 
     //Cache the results for future requests
-    await redis.set(`contract:${id}`, contract, { ex: 600 }); // 1 hour
+    await redis.set(`contract:${id}`, contract, { ex: 600 }); 
 
     res.json(contract);
   } catch (error) {

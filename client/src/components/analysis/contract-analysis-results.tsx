@@ -57,6 +57,8 @@ import { useCurrentUser } from "@/hooks/use-current-user"
     export default function     PrivacyAnalysisResults({isActive,id}: PrivacyAnalysisResultsProps) {
         const { user } = useCurrentUser();
         // console.log("I am user",user);
+        console.log("Id", id);
+        
         isActive=user.isPremium
         
         const [activeTab, setActiveTab] = useState("overview")
