@@ -159,7 +159,7 @@ export default function UserContracts() {
             : 0;
 
     const highRiskContracts = contracts?.filter(
-        (contract) => contract.overallScore >= 60
+        (contract) => contract.overallScore < 40
     ).length ?? 0;
 
 
