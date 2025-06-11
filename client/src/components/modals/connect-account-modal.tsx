@@ -19,10 +19,17 @@ import Link from "next/link";
 
 function googleSignIn(): Promise<void> {
     return new Promise((resolve) => {
-        window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/auth/google`;
+        // Check if the current protocol is http and force https
+        const currentProtocol = window.location.protocol;
+        const apiUrl = currentProtocol === 'http:' 
+            ? 'https://server.sanrakshan.xyz' // Force HTTPS if it's HTTP
+            : `${window.location.protocol}//server.sanrakshan.xyz`; 
+
+        window.location.href = `${apiUrl}/api/auth/google`;
         resolve();
     });
 }
+
 
 export function ConnectAccountModal() {
     const [isAgreed, setIsAgreed] = useState(false);
