@@ -1,4 +1,4 @@
-import express from "express";
+    import express from "express";
 import { isAuthenticated } from "../middleware/auth";
 import {
     analyzeContract,

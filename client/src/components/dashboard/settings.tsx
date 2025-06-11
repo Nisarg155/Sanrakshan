@@ -2,7 +2,7 @@ import {useCurrentUser} from "@/hooks/use-current-user";
 import {useSubscription} from "@/hooks/use-subscription";
 import {api} from "@/lib/api";
 // import stripePromise from "@/lib/stripe";
-import {toast} from "sonner";
+
 import {
     Card,
     CardContent,
@@ -71,6 +71,7 @@ export default function Settings() {
             setPaymentSuccess(true);
             setStatusDialogOpen(true);
             setDialogOpen(false);
+
         } catch (error) {
             setPaymentSuccess(false);
             setStatusDialogOpen(true);
@@ -179,7 +180,7 @@ export default function Settings() {
                             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                                 <DialogTrigger asChild>
                                     <Button className="w-full"
-                                          >Purchase Lifetime Membership</Button>
+                                    >Purchase Lifetime Membership</Button>
                                 </DialogTrigger>
                                 <DialogContent className="max-w-md">
                                     <DialogHeader>

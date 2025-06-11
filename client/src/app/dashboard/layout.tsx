@@ -1,4 +1,5 @@
 import { ProtectedLayout } from "@/components/dashboard/protected-layout";
+// UI Part Of dashboard
 import DashboardLayout from "@/components/dashboard/sidebar";
 
 export default function Layout({ children }: { children: React.ReactNode }) {

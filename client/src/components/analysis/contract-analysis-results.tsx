@@ -1,147 +1,120 @@
-    "use client"
+"use client"
 
-    import {JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect, useState} from "react"
-    import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card"
-    import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
-    import {Badge} from "@/components/ui/badge"
-    import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert"
-    import {InfoIcon, ShieldAlert, ShieldCheck, AlertTriangle, Loader} from 'lucide-react'
-    import {Progress} from "@/components/ui/progress"
-    import {Separator} from "@/components/ui/separator"
-    import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table"
-    import { useQuery } from "@tanstack/react-query"
-    import { api } from "@/lib/api"
-    // import router from "next/router"
-
-    import { useRouter } from "next/router";
+import {JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal,  useState} from "react"
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card"
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
+import {Badge} from "@/components/ui/badge"
+import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert"
+import {InfoIcon, ShieldAlert, ShieldCheck, AlertTriangle} from 'lucide-react'
+import {Progress} from "@/components/ui/progress"
+import {Separator} from "@/components/ui/separator"
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from "@/components/ui/table"
+import {useQuery} from "@tanstack/react-query"
+import {api} from "@/lib/api"
 import Link from "next/link"
-import { useCurrentUser } from "@/hooks/use-current-user"
+import {useCurrentUser} from "@/hooks/use-current-user"
 
 
-    interface IPrivacyRisk {
-        risk: string
-        explanation: string
-        severity: "low" | "medium" | "high"
-    }
+interface IPrivacyRisk {
+    risk: string
+    explanation: string
+    severity: "low" | "medium" | "high"
+}
 
-    interface IDataSharing {
-        entity: string
-        purpose: string
-    }
+interface IDataSharing {
+    entity: string
+    purpose: string
+}
 
-    interface IPrivacyAnalysis {
-        privacyRisks: IPrivacyRisk[]
-        summary: string
-        recommendations: string[]
-        keyClauses: string[]
-        legalCompliance: string
-        dataCollected: string[]
-        dataUsage: string[]
-        dataSharing: IDataSharing[]
-        userRights: string[]
-        dataRetentionPeriod: string
-        trackingTechnologies: string[]
-        policyJurisdiction: string[]
-        gdprCompliance: boolean
-        ccpaCompliance: boolean
-        otherRegulations: string[]
-        overallScore:any
-    }
+interface IPrivacyAnalysis {
+    privacyRisks: IPrivacyRisk[]
+    summary: string
+    recommendations: string[]
+    keyClauses: string[]
+    legalCompliance: string
+    dataCollected: string[]
+    dataUsage: string[]
+    dataSharing: IDataSharing[]
+    userRights: string[]
+    dataRetentionPeriod: string
+    trackingTechnologies: string[]
+    policyJurisdiction: string[]
+    gdprCompliance: boolean
+    ccpaCompliance: boolean
+    otherRegulations: string[]
+    overallScore: any
+}
 
-    interface PrivacyAnalysisResultsProps {
-        // analysisResults: IPrivacyAnalysis,
-        isActive?: boolean
-        id:unknown
-    }
+interface PrivacyAnalysisResultsProps {
+    // analysisResults: IPrivacyAnalysis,
+    isActive?: boolean
+    id: unknown
+}
 
-    export default function     PrivacyAnalysisResults({isActive,id}: PrivacyAnalysisResultsProps) {
-        const { user } = useCurrentUser();
-        // console.log("I am user",user);
-        console.log("Id", id);
-        
-        isActive=user.isPremium
-        
-        const [activeTab, setActiveTab] = useState("overview")
-        const {
-            data: analysisResults,
-            isLoading,
-            isError,
-        } = useQuery({
-            queryKey: ["privacyAnalysisResults"],
-            queryFn: async () => {
-                const res = await api.get(`contracts/contract/${id}`)
-                return res.data
-            },
-        })
-        console.log(analysisResults)
-        
-        if (isLoading) return <div>Loading...</div>
-        if (isError) return <div>Error loading analysis results.</div>
-        
-        // const handleUpgradeClick = () => {
-        //     // Redirect to /dashboard/settings
-        //     router.push("/dashboard/settings");
-        // };
+export default function PrivacyAnalysisResults({isActive, id}: PrivacyAnalysisResultsProps) {
+    const {user} = useCurrentUser();
 
-        const getSeverityColor = (severity: string) => {
-            switch (severity) {
-                case "high":
-                    return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"
-                case "medium":
-                    return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400"
-                case "low":
-                    return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
-                default:
-                    return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400"
-                }
+    isActive = user.isPremium
+
+    const [activeTab, setActiveTab] = useState("overview")
+    const {
+        data: analysisResults,
+        isLoading,
+        isError,
+    } = useQuery({
+        queryKey: ["privacyAnalysisResults"],
+        queryFn: async () => {
+            const res = await api.get(`contracts/contract/${id}`)
+            return res.data
+        },
+    })
+    console.log(analysisResults)
+
+    if (isLoading) return <div>Loading...</div>
+    if (isError) return <div>Error loading analysis results.</div>
+
+
+    const getSeverityColor = (severity: string) => {
+        switch (severity) {
+            case "high":
+                return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"
+            case "medium":
+                return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400"
+            case "low":
+                return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
+            default:
+                return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400"
         }
+    }
 
-        const getSeverityIcon = (severity: string) => {
-            switch (severity) {
-                case "high":
-                    return <ShieldAlert className="h-5 w-5 text-red-600 dark:text-red-400"/>
-                case "medium":
-                    return <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400"/>
-                case "low":
-                    return <ShieldCheck className="h-5 w-5 text-green-600 dark:text-green-400"/>
-                default:
-                    return <InfoIcon className="h-5 w-5 text-gray-600 dark:text-gray-400"/>
-            }
+    const getSeverityIcon = (severity: string) => {
+        switch (severity) {
+            case "high":
+                return <ShieldAlert className="h-5 w-5 text-red-600 dark:text-red-400"/>
+            case "medium":
+                return <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400"/>
+            case "low":
+                return <ShieldCheck className="h-5 w-5 text-green-600 dark:text-green-400"/>
+            default:
+                return <InfoIcon className="h-5 w-5 text-gray-600 dark:text-gray-400"/>
         }
+    }
 
-        const calculateComplianceScore = () => {
-            // let score = 50 // Base score
+    const calculateComplianceScore = () => {
 
-            // // Add points for compliance
-            // if (analysisResults.gdprCompliance) score += 15
-            // if (analysisResults.ccpaCompliance) score += 15
-            
-            // // Deduct points for risks
-            // const highRisks = analysisResults.privacyRisks.filter((r) => r.severity === "high").length
-            // const mediumRisks = analysisResults.privacyRisks.filter((r) => r.severity === "medium").length
-            
-            // score -= highRisks * 10
-            // score -= mediumRisks * 5
+        return analysisResults.overallScore
+    }
 
-            // // Add points for user rights and transparency
-            // if (analysisResults.userRights.length > 0) score += 10
-            // if (analysisResults.dataRetentionPeriod !== "Unknown") score += 5
-            
-            // // Ensure score is between 0 and 100
-            // return Math.max(0, Math.min(100, score))
-            return analysisResults.overallScore
-        }
-        
-        const complianceScore = calculateComplianceScore()
+    const complianceScore = calculateComplianceScore()
 
-        return (
-            <div className="container mx-auto px-4 py-8">
-                <div className="mb-6">
-                    <h1 className="text-3xl font-bold mb-2">Privacy Policy Analysis</h1>
-                    <p className="text-muted-foreground">
-                        Analysis of privacy practices, data collection, and regulatory compliance
-                    </p>
-                </div>
+    return (
+        <div className="container mx-auto px-4 py-8">
+            <div className="mb-6">
+                <h1 className="text-3xl font-bold mb-2">Privacy Policy Analysis</h1>
+                <p className="text-muted-foreground">
+                    Analysis of privacy practices, data collection, and regulatory compliance
+                </p>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 <Card>
@@ -226,7 +199,7 @@ import { useCurrentUser } from "@/hooks/use-current-user"
                             <div className="mt-4">
                                 <p className="text-sm font-medium mb-1">Other Regulations:</p>
                                 <div className="flex flex-wrap gap-2">
-                                    {analysisResults.otherRegulations.map((reg:any, index:any) => (
+                                    {analysisResults.otherRegulations.map((reg: any, index: any) => (
                                         <Badge key={index} variant="outline">
                                             {reg}
                                         </Badge>
@@ -248,21 +221,27 @@ import { useCurrentUser } from "@/hooks/use-current-user"
                                 <span>High Risk Issues</span>
                                 <Badge variant="outline"
                                        className="bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
-                                    {analysisResults.privacyRisks.filter((r: { severity: string }) => r.severity === "high").length}
+                                    {analysisResults.privacyRisks.filter((r: {
+                                        severity: string
+                                    }) => r.severity === "high").length}
                                 </Badge>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span>Medium Risk Issues</span>
                                 <Badge variant="outline"
                                        className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">
-                                    {analysisResults.privacyRisks.filter((r: { severity: string }) => r.severity === "medium").length}
+                                    {analysisResults.privacyRisks.filter((r: {
+                                        severity: string
+                                    }) => r.severity === "medium").length}
                                 </Badge>
                             </div>
                             <div className="flex justify-between items-center">
                                 <span>Low Risk Issues</span>
                                 <Badge variant="outline"
                                        className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
-                                    {analysisResults.privacyRisks.filter((r: { severity: string }) => r.severity === "low").length}
+                                    {analysisResults.privacyRisks.filter((r: {
+                                        severity: string
+                                    }) => r.severity === "low").length}
                                 </Badge>
                             </div>
                         </div>
@@ -305,7 +284,6 @@ import { useCurrentUser } from "@/hooks/use-current-user"
                 </TabsContent>
 
 
-
                 <TabsContent value="risks" className="mt-4">
                     <Card>
                         <CardHeader>
@@ -315,7 +293,11 @@ import { useCurrentUser } from "@/hooks/use-current-user"
                         <CardContent>
                             {analysisResults.privacyRisks.length > 0 ? (
                                 <div className="space-y-4">
-                                    {analysisResults.privacyRisks.map((risk: { severity: string; risk: string; explanation: string }, index:number) => (
+                                    {analysisResults.privacyRisks.map((risk: {
+                                        severity: string;
+                                        risk: string;
+                                        explanation: string
+                                    }, index: number) => (
                                         <div key={index}
                                              className={index >= 3 && !isActive ? "blur-sm pointer-events-none select-none" : ""}
                                         >
@@ -342,11 +324,13 @@ import { useCurrentUser } from "@/hooks/use-current-user"
                                     {!isActive && analysisResults.privacyRisks.length > 3 && (
                                         <div className="text-center py-4 bg-gray-100 rounded-lg">
                                             <h3 className="text-lg font-medium mb-2">Unlock More Privacy Risks</h3>
-                                            <p className="text-muted-foreground mb-3">Subscribe to access the full list of privacy risks.</p>
+                                            <p className="text-muted-foreground mb-3">Subscribe to access the full list
+                                                of privacy risks.</p>
                                             <Link href="/dashboard/settings">
-                                            <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                                                Upgrade Now
-                                            </button>
+                                                <button
+                                                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                                    Upgrade Now
+                                                </button>
                                             </Link>
                                         </div>
                                     )}
@@ -366,7 +350,8 @@ import { useCurrentUser } from "@/hooks/use-current-user"
 
 
                 <TabsContent value="data" className="mt-4">
-                    <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 transition-all ${!isActive ? "blur-sm pointer-events-none" : ""}`}>
+                    <div
+                        className={`grid grid-cols-1 md:grid-cols-2 gap-6 transition-all ${!isActive ? "blur-sm pointer-events-none" : ""}`}>
                         <Card>
                             <CardHeader>
                                 <CardTitle>Data Collection</CardTitle>
@@ -375,7 +360,7 @@ import { useCurrentUser } from "@/hooks/use-current-user"
                             <CardContent>
                                 {analysisResults.dataCollected.length > 0 ? (
                                     <ul className="space-y-2">
-                                        {analysisResults.dataCollected.map((data:string, index: Key | null | undefined) => (
+                                        {analysisResults.dataCollected.map((data: string, index: Key | null | undefined) => (
                                             <li key={index} className="flex items-center gap-2">
                                                 <span className="h-2 w-2 rounded-full bg-primary"></span>
                                                 {data}
@@ -399,7 +384,7 @@ import { useCurrentUser } from "@/hooks/use-current-user"
                                         <div>
                                             <h3 className="text-sm font-medium mb-2">Tracking Technologies</h3>
                                             <div className="flex flex-wrap gap-2">
-                                                {analysisResults.trackingTechnologies.map((tech:string, index: Key | null | undefined) => (
+                                                {analysisResults.trackingTechnologies.map((tech: string, index: Key | null | undefined) => (
                                                     <Badge key={index} variant="outline">
                                                         {tech}
                                                     </Badge>
@@ -421,7 +406,7 @@ import { useCurrentUser } from "@/hooks/use-current-user"
                                     <h3 className="text-sm font-medium mb-2">Data Usage</h3>
                                     {analysisResults.dataUsage.length > 0 ? (
                                         <ul className="space-y-2">
-                                            {analysisResults.dataUsage.map((usage:string, index:Key) => (
+                                            {analysisResults.dataUsage.map((usage: string, index: Key) => (
                                                 <li key={index} className="flex items-center gap-2">
                                                     <span className="h-2 w-2 rounded-full bg-primary"></span>
                                                     {usage}
@@ -446,7 +431,10 @@ import { useCurrentUser } from "@/hooks/use-current-user"
                                                 </TableRow>
                                             </TableHeader>
                                             <TableBody>
-                                                {analysisResults.dataSharing.map((sharing: { entity: string ;purpose:string }, index: Key | null | undefined) => (
+                                                {analysisResults.dataSharing.map((sharing: {
+                                                    entity: string;
+                                                    purpose: string
+                                                }, index: Key | null | undefined) => (
                                                     <TableRow key={index}>
                                                         <TableCell>{sharing.entity}</TableCell>
                                                         <TableCell>{sharing.purpose}</TableCell>
@@ -465,7 +453,7 @@ import { useCurrentUser } from "@/hooks/use-current-user"
                                         <div>
                                             <h3 className="text-sm font-medium mb-2">Policy Jurisdiction</h3>
                                             <div className="flex flex-wrap gap-2">
-                                                {analysisResults.policyJurisdiction.map((jurisdiction:string, index:number) => (
+                                                {analysisResults.policyJurisdiction.map((jurisdiction: string, index: number) => (
                                                     <Badge key={index} variant="outline">
                                                         {jurisdiction}
                                                     </Badge>
@@ -480,12 +468,13 @@ import { useCurrentUser } from "@/hooks/use-current-user"
 
                     {!isActive && (
                         <div className="text-center py-4 bg-gray-100 rounded-lg">
-                            <h3 className="text-lg font-medium mb-2">Unlock To See Data Collection and Usage Details</h3>
+                            <h3 className="text-lg font-medium mb-2">Unlock To See Data Collection and Usage
+                                Details</h3>
                             <p className="text-muted-foreground mb-3">Subscribe to access the full list .</p>
                             <Link href="/dashboard/settings">
-                            <button  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                                Upgrade Now
-                            </button>
+                                <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                    Upgrade Now
+                                </button>
                             </Link>
                         </div>
                     )}
@@ -501,7 +490,7 @@ import { useCurrentUser } from "@/hooks/use-current-user"
                         <CardContent>
                             {analysisResults.userRights.length > 0 ? (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {analysisResults.userRights.map((right:string, index:string) => (
+                                    {analysisResults.userRights.map((right: string, index: string) => (
                                         <div key={index} className="flex items-start gap-3 p-3 border rounded-lg">
                                             <ShieldCheck className="h-5 w-5 text-primary mt-0.5"/>
                                             <div>
@@ -532,7 +521,7 @@ import { useCurrentUser } from "@/hooks/use-current-user"
                         <CardContent>
                             {analysisResults.recommendations.length > 0 ? (
                                 <div className="space-y-4">
-                                    {analysisResults.recommendations.map((recommendation:string, index:any) => (
+                                    {analysisResults.recommendations.map((recommendation: string, index: any) => (
                                         <div key={index} className="flex items-start gap-3 p-4 border rounded-lg">
                                             <div
                                                 className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border bg-background">
@@ -554,7 +543,3 @@ import { useCurrentUser } from "@/hooks/use-current-user"
         </div>
     )
 }
-function setIsMounted(arg0: boolean) {
-    throw new Error("Function not implemented.")
-}
-

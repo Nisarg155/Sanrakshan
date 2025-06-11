@@ -5,6 +5,7 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
     return (
         <>
             {children}
+            {/*Singin Modal*/}
             <ConnectAccountModal />
         </>
     );
