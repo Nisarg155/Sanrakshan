@@ -1,6 +1,6 @@
 
 > Video link :- [Youtube](https://youtu.be/n-zGngF6uJ4)
-
+> <br> SRS Document :- [Doc](assets/SRS.pdf)
 ---
 
 # 🛡️ Sanrakshan – Privacy Policy Analyzer
