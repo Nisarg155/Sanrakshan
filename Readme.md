@@ -1,9 +1,13 @@
 
-> Video link :- [Youtube](https://youtu.be/n-zGngF6uJ4)
-> <br> SRS Document :- [Doc](assets/SRS.pdf)
----
 
 # 🛡️ Sanrakshan – Privacy Policy Analyzer
+
+## 🔗 Project Resources
+
+🎥 **Demo Video:** [Watch on YouTube](https://youtu.be/n-zGngF6uJ4)  
+📄 **SRS Document:** [View PDF](assets/SRS.pdf)
+
+---
 
 ## 🧠 How We Got the Idea
 
